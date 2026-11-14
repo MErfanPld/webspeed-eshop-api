@@ -33,6 +33,15 @@ class AuthTests(ApiTestCase):
         self.assertEqual(r.status_code, 429)
         self.assertIn("retryAfter", r.json()["details"])
 
+    def test_successful_login_resets_the_limit(self):
+        for _ in range(7):
+            self.client.post("/api/v1/auth/login", {"email": "owner@test.local", "password": "x"}, format="json")
+        self.login()
+        for _ in range(7):
+            self.client.post("/api/v1/auth/login", {"email": "owner@test.local", "password": "x"}, format="json")
+        r = self.client.post("/api/v1/auth/login", {"email": "owner@test.local", "password": PASSWORD}, format="json")
+        self.assertEqual(r.status_code, 200)
+
     def test_admin_requires_auth(self):
         self.assertEqual(self.client.get("/api/v1/admin/pages").status_code, 401)
         self.client.credentials(HTTP_AUTHORIZATION="Bearer garbage")

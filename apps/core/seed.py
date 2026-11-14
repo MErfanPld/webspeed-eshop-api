@@ -127,6 +127,7 @@ def ensure_seeded() -> tuple[bool, str | None]:
             "phone": info.get("phone", ""),
             "email": info.get("email", ""),
             "address": info.get("address", ""),
+            "workingHours": info.get("workingHours", ""),
             "currency": "IRT",
             "payment": info.get("payment", {}),
             "shipping": {"flatRate": 0, "freeOver": 2_500_000},

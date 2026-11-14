@@ -49,7 +49,7 @@ DOMAIN_RE = re.compile(r"^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+
 # --- URLs ----------------------------------------------------------------------
 
 ALLOWED_PROTOCOLS = {"http", "https", "mailto", "tel"}
-URL_KEYS = {"href", "ctaHref", "viewAllHref", "url", "src", "image", "logo", "avatar", "ogImage"}
+URL_KEYS = {"href", "ctaHref", "viewAllHref", "url", "src", "image", "logo", "avatar", "ogImage", "instagram"}
 _CTRL = re.compile(r"[\x00-\x1f\x7f\s]+")
 _SCHEME = re.compile(r"^([a-zA-Z][a-zA-Z0-9+.-]*):")
 

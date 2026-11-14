@@ -5,7 +5,7 @@ from apps.core.validators import DOMAIN_RE, STORE_SLUG_RE, sanitize_urls
 
 from .models import Store, StoreMember
 
-SETTING_KEYS = {"tagline", "phone", "email", "address", "currency"}
+SETTING_KEYS = {"tagline", "phone", "email", "address", "currency", "workingHours", "instagram"}
 
 
 def serialize(store: Store) -> dict:
@@ -28,6 +28,8 @@ def public_info(store: Store) -> dict:
         "phone": s.get("phone", ""),
         "email": s.get("email", ""),
         "address": s.get("address", ""),
+        "workingHours": s.get("workingHours", ""),
+        "instagram": s.get("instagram", ""),
         "payment": s.get("payment", {}),
         "shipping": s.get("shipping", {}),
     }

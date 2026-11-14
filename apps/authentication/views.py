@@ -83,7 +83,8 @@ class LoginView(APIView):
         password = data.get("password") if isinstance(data.get("password"), str) else ""
         if not email or not password:
             raise ApiError("ایمیل و رمز عبور را وارد کنید.", 400)
-        ok, retry = ratelimit.hit(f"login:{ratelimit.client_ip(request)}:{email}", 8, 15 * 60)
+        limit_key = f"login:{ratelimit.client_ip(request)}:{email}"
+        ok, retry = ratelimit.hit(limit_key, 8, 15 * 60)
         if not ok:
             raise ApiError(
                 f"تلاش‌های ناموفق زیاد بود. {max(1, -(-retry // 60))} دقیقه دیگر دوباره امتحان کنید.",
@@ -95,6 +96,8 @@ class LoginView(APIView):
         valid = user.check_password(password) if user else check_password(password, _DUMMY_HASH) and False
         if not user or not valid:
             raise ApiError("ایمیل یا رمز عبور اشتباه است.", 401)
+        # Only failed attempts count towards the limit
+        ratelimit.reset(limit_key)
         refresh = RefreshToken.for_user(user)
         response = Response({"user": user_dict(user), **token_payload(refresh)})
         set_auth_cookies(response, refresh)
