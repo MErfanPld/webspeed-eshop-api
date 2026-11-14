@@ -72,3 +72,17 @@ class TenancyAndPermissionTests(ApiTestCase):
         self.assertEqual(r.status_code, 400)
         r = self.client.patch("/api/v1/admin/store", {"domain": "not a domain"}, format="json", HTTP_ORIGIN=ORIGIN)
         self.assertEqual(r.status_code, 400)
+
+
+class ThemeTests(ApiTestCase):
+    def test_theme_validation_and_public_exposure(self):
+        self.login()
+        theme = {"colors": {"primary": "#AA0000", "evil": "red"}, "typography": {"baseSize": 16, "lineHeight": 1.6}}
+        r = self.client.patch("/api/v1/admin/store", {"settings": {"theme": theme}}, format="json")
+        self.assertEqual(r.status_code, 200, r.content)
+        public = self.client.get("/api/v1/store").json()["store"]["theme"]
+        self.assertEqual(public, {"colors": {"primary": "#aa0000"}, "typography": {"baseSize": 16.0, "lineHeight": 1.6}})
+        bad = {"colors": {"primary": "red;}</style><script>"}}
+        self.assertEqual(self.client.patch("/api/v1/admin/store", {"settings": {"theme": bad}}, format="json").status_code, 400)
+        bad = {"typography": {"baseSize": 99}}
+        self.assertEqual(self.client.patch("/api/v1/admin/store", {"settings": {"theme": bad}}, format="json").status_code, 400)

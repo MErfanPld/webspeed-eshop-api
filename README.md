@@ -118,11 +118,14 @@ frontend sources (`src/builder/registry/block-definitions.ts`, `src/config/home-
 | POST | `/auth/refresh` | refresh | `{refresh?}` → `{access, refresh}` |
 | POST | `/auth/logout` | — | `{refresh?}` → `{ok}` |
 | GET | `/auth/me` | user | `{user, store, memberships}` |
+| POST | `/auth/password` | user (5/15 min) | `{currentPassword, newPassword}` → `{ok, access, refresh}`; revokes all other sessions |
 | GET | `/admin/store` | editor | `{store, role, memberships}` |
 | PATCH | `/admin/store` | admin | `{name?, domain?, settings?}` → `{store}` |
 | POST | `/admin/store` | member | `{storeId}` switch · `{create: {name, slug, domain?}}` → `{store, storeId}` |
 | GET | `/admin/stores` | user | `{stores}` |
-| GET | `/store` | — | `{store}` public info (contact, payment, shipping) |
+| GET | `/store` | — | `{store}` public info (contact, hours, Instagram, payment, shipping, theme) |
+| GET / POST | `/admin/members` | member / owner | `{members, canManage}` · `{email, role, name?, password?}` → `{member}` |
+| PATCH / DELETE | `/admin/members/<userId>` | owner | `{role}` → `{member}` · `{ok}` (a store always keeps one owner) |
 | GET / POST | `/admin/pages` | editor | `{pages}` · `{name, slug, type?}` → `{page}` |
 | GET / PUT / DELETE | `/admin/pages/<id>` | editor (DELETE: admin) | `{page}` · `{page: ManagedPage}` → `{page}` |
 | POST | `/admin/pages/<id>/publish` · `/unpublish` · `/duplicate` | editor | `{page}` |
@@ -142,6 +145,10 @@ frontend sources (`src/builder/registry/block-definitions.ts`, `src/config/home-
 | GET | `/admin/orders/<id>/receipt` | editor | `{url, expiresIn}` signed URL |
 | GET | `/admin/customers` | editor | `{customers}` |
 | GET | `/admin/stats?days=30` | editor | dashboard KPIs |
+| POST | `/customer/otp/request` | — (3/10 min per phone, 10/10 min per IP) | `{phone}` → `{ok, expiresIn, isNew, devCode?}` |
+| POST | `/customer/otp/verify` | — (5 attempts per code) | `{phone, code}` → `{customer, isNew}` + httpOnly `ws_customer` cookie |
+| GET / PATCH | `/customer/me` | customer | `{customer, orders}` · `{name?, email?}` |
+| POST | `/customer/logout` | — | `{ok}` |
 
 Shapes (`ManagedPage`, `Product`, `Order`, …) are identical to the frontend
 TypeScript types (camelCase); the full schema is in Swagger.
@@ -153,16 +160,17 @@ TypeScript types (camelCase); the full schema is in Swagger.
 - **URLs:** `javascript:`, `data:`, `vbscript:`, `//host` … removed from all URL fields (`href`, `image`, `src`, …) in pages, products, categories and settings.
 - **Orders:** server-side prices and shipping (`flatRate`, `freeOver`), variant validation, stock reserved with row locks in one transaction, cancellation restores stock and reopening reserves it again, tracking requires the buyer's phone, customers created/updated per store by phone.
 - **Files:** type detected from magic bytes (PNG/JPEG/GIF/WEBP; SVG rejected), 5 MB limit; media in the public bucket, receipts in the private bucket served only through short-lived signed URLs.
-- **Rate limits (Redis):** login, checkout, tracking.
+- **Rate limits (Redis):** login (failed attempts only), checkout, tracking, OTP requests, password change.
+- **Theme:** `settings.theme = {colors: {primary, primaryHover, accent, accentHover, background, surface, foreground, muted, mutedForeground, border, error: "#rrggbb"}, typography: {baseSize 12–22, lineHeight 1.2–2.2}}`, validated server-side.
+- **Customers:** OTP codes are 6 digits, stored only as HMAC hashes in Redis for 2 minutes; sessions are signed, store-bound, httpOnly cookies (30 days). Orders placed with the same phone appear in the customer's profile.
 
-## Frontend migration notes
+## Frontend integration
 
-1. Set the API base URL for `HttpPageRepository` (`/api/admin/pages` → `<API>/api/v1/admin/pages`); paths and payloads are unchanged.
-2. Send `credentials: "include"` (cross-origin) or call the API through a same-origin proxy.
-3. Replace `src/server/services/*` calls in server components with `fetch(<API>/api/v1/...)`, forwarding the storefront host as `X-Store-Host`.
-4. Receipts: the admin UI should request `/admin/orders/<id>/receipt` and open the returned `url`.
-5. Admin login: `/auth/login`, then `/auth/refresh` on 401.
-6. The SQLite layer, `src/middleware.ts` session check and `src/app/api/*` become obsolete once the frontend points at this API.
+The Next.js frontend (`webspeed-eshop`) proxies `/api/v1/*` (and `/media/*`) to
+this API, so cookies are first-party. Its server components call
+`API_INTERNAL_URL` directly with `X-Store-Host` and the forwarded cookies.
+Configure `CORS_ALLOWED_ORIGINS` / `CSRF_TRUSTED_ORIGINS` with the frontend
+origin (e.g. `http://localhost:3000`).
 
 ## Environment variables
 

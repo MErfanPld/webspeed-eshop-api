@@ -7,12 +7,15 @@ httpOnly cookies (for the browser frontend, `credentials: "include"`).
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from drf_spectacular.utils import OpenApiResponse, extend_schema, inline_serializer
 from rest_framework import serializers
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.core import ratelimit
@@ -162,3 +165,39 @@ class MeView(AdminView):
         return Response(
             {"user": user_dict(ctx.user), "store": membership_dict(current), "memberships": ctx.membership_payload()}
         )
+
+
+PasswordRequest = inline_serializer(
+    "PasswordChangeRequest", {"currentPassword": serializers.CharField(), "newPassword": serializers.CharField()}
+)
+
+
+class PasswordChangeView(AdminView):
+    """Change own password; every other session (refresh token) is revoked."""
+
+    @extend_schema(summary="Change password", request=PasswordRequest, responses={200: dict, 400: dict})
+    def post(self, request):
+        user = request.user
+        d = body(request)
+        current = d.get("currentPassword") if isinstance(d.get("currentPassword"), str) else ""
+        new = d.get("newPassword") if isinstance(d.get("newPassword"), str) else ""
+        ok, retry = ratelimit.hit(f"pwchange:{user.id}", 5, 15 * 60)
+        if not ok:
+            raise ApiError("تلاش‌های ناموفق زیاد بود؛ کمی بعد دوباره امتحان کنید.", 429, {"retryAfter": retry})
+        if not user.check_password(current):
+            raise ApiError("رمز عبور فعلی اشتباه است.", 400, {"currentPassword": "رمز عبور فعلی اشتباه است."})
+        if current == new:
+            raise ApiError("رمز جدید باید با رمز فعلی متفاوت باشد.", 400)
+        try:
+            validate_password(new, user)
+        except ValidationError as e:
+            raise ApiError("رمز عبور جدید ضعیف است", 400, {"newPassword": e.messages}) from None
+        user.set_password(new)
+        user.save(update_fields=["password"])
+        for token in OutstandingToken.objects.filter(user=user):
+            BlacklistedToken.objects.get_or_create(token=token)
+        ratelimit.reset(f"pwchange:{user.id}")
+        refresh = RefreshToken.for_user(user)
+        response = Response({"ok": True, **token_payload(refresh)})
+        set_auth_cookies(response, refresh)
+        return response

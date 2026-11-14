@@ -266,6 +266,10 @@ CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=CORS_ALLOWED_ORI
 DEFAULT_STORE_SLUG = env("DEFAULT_STORE_SLUG", default="")
 ADMIN_EMAIL = env("ADMIN_EMAIL", default="admin@webspeed.local")
 ADMIN_PASSWORD = env("ADMIN_PASSWORD", default="")
+# Customer OTP: "console" logs codes (development). Add a provider in apps/customers/otp.py
+SMS_BACKEND = env("SMS_BACKEND", default="console")
+# Return the OTP in the API response (development/E2E only — never in production)
+OTP_DEV_RETURN_CODE = env.bool("OTP_DEV_RETURN_CODE", default=False)
 MAX_UPLOAD_BYTES = 5 * 1024 * 1024
 # Trust X-Forwarded-For / X-Store-Host only behind a known proxy (frontend server)
 TRUST_PROXY_HEADERS = env.bool("TRUST_PROXY_HEADERS", default=False)

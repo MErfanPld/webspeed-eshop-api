@@ -1,9 +1,45 @@
+import re
+
 from django.db import IntegrityError, transaction
 
 from apps.core.errors import bad_request, conflict
 from apps.core.validators import DOMAIN_RE, STORE_SLUG_RE, sanitize_urls
 
 from .models import Store, StoreMember
+
+HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
+# Storefront CSS variables a theme may set (see frontend ThemeStyle)
+THEME_COLORS = {
+    "primary", "primaryHover", "accent", "accentHover", "background", "surface",
+    "foreground", "muted", "mutedForeground", "border", "error",
+}
+
+
+def clean_theme(raw) -> dict:
+    """Theme: {colors: {name: #rrggbb}, typography: {baseSize 12–22, lineHeight 1.2–2.2}}"""
+    if not isinstance(raw, dict):
+        raise bad_request("تنظیمات تم نامعتبر است")
+    colors = {}
+    for k, v in (raw.get("colors") or {}).items():
+        if k not in THEME_COLORS:
+            continue
+        if not isinstance(v, str) or not HEX_RE.match(v):
+            raise bad_request(f"رنگ «{k}» باید به‌صورت #RRGGBB باشد")
+        colors[k] = v.lower()
+    typo = raw.get("typography") or {}
+    out_typo = {}
+    for key, lo, hi in (("baseSize", 12, 22), ("lineHeight", 1.2, 2.2)):
+        if typo.get(key) is None:
+            continue
+        try:
+            val = float(typo[key])
+        except (TypeError, ValueError):
+            raise bad_request("مقدار تایپوگرافی نامعتبر است") from None
+        if not lo <= val <= hi:
+            raise bad_request(f"مقدار {key} باید بین {lo} و {hi} باشد")
+        out_typo[key] = round(val, 2)
+    return {"colors": colors, "typography": out_typo}
+
 
 SETTING_KEYS = {"tagline", "phone", "email", "address", "currency", "workingHours", "instagram"}
 
@@ -32,6 +68,7 @@ def public_info(store: Store) -> dict:
         "instagram": s.get("instagram", ""),
         "payment": s.get("payment", {}),
         "shipping": s.get("shipping", {}),
+        "theme": s.get("theme") or None,
     }
 
 
@@ -52,6 +89,8 @@ def _clean_settings(current: dict, patch) -> dict:
     if isinstance(patch.get("payment"), dict):
         p = patch["payment"]
         out["payment"] = {k: str(p.get(k) or "").strip()[:60] for k in ("cardNumber", "cardHolder", "bank")}
+    if "theme" in patch:
+        out["theme"] = clean_theme(patch["theme"]) if patch["theme"] is not None else None
     if isinstance(patch.get("shipping"), dict):
         s = patch["shipping"]
 

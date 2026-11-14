@@ -8,14 +8,16 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from apps.authentication.views import LoginView, LogoutView, MeView, RefreshView
+from apps.authentication.views import LoginView, LogoutView, MeView, PasswordChangeView, RefreshView
 from apps.catalog import views as catalog
 from apps.core.views import HealthView
+from apps.customers import views as customers
 from apps.customers.views import CustomerListView
 from apps.media import views as media
 from apps.orders import views as orders
 from apps.pages import views as pages
 from apps.stats.views import DashboardView
+from apps.stores import members
 from apps.stores import views as stores
 
 api = [
@@ -25,9 +27,12 @@ api = [
     path("auth/refresh", RefreshView.as_view(), name="auth-refresh"),
     path("auth/logout", LogoutView.as_view(), name="auth-logout"),
     path("auth/me", MeView.as_view(), name="auth-me"),
+    path("auth/password", PasswordChangeView.as_view(), name="auth-password"),
     # Stores
     path("admin/store", stores.StoreView.as_view(), name="admin-store"),
     path("admin/stores", stores.StoresListView.as_view(), name="admin-stores"),
+    path("admin/members", members.MemberListView.as_view(), name="admin-members"),
+    path("admin/members/<int:user_id>", members.MemberDetailView.as_view(), name="admin-member"),
     path("store", stores.PublicStoreView.as_view(), name="public-store"),
     # Pages
     path("admin/pages", pages.PageListView.as_view(), name="admin-pages"),
@@ -55,6 +60,10 @@ api = [
     path("admin/orders/<uuid:order_id>/receipt", orders.AdminOrderReceiptView.as_view(), name="admin-order-receipt"),
     path("files/receipts/<str:token>", orders.SignedReceiptFileView.as_view(), name="receipt-file"),
     path("admin/customers", CustomerListView.as_view(), name="admin-customers"),
+    path("customer/otp/request", customers.OtpRequestView.as_view(), name="customer-otp-request"),
+    path("customer/otp/verify", customers.OtpVerifyView.as_view(), name="customer-otp-verify"),
+    path("customer/me", customers.CustomerMeView.as_view(), name="customer-me"),
+    path("customer/logout", customers.CustomerLogoutView.as_view(), name="customer-logout"),
     # Stats
     path("admin/stats", DashboardView.as_view(), name="admin-stats"),
 ]
