@@ -16,6 +16,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         unique=True,
     )
+    name = models.CharField(max_length=150, blank=True)
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     is_active = models.BooleanField(default=True)
@@ -38,7 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
     def get_full_name(self):
-        full_name = f"{self.first_name} {self.last_name}".strip()
+        full_name = self.name or f"{self.first_name} {self.last_name}".strip()
         return full_name or self.email
 
     def get_short_name(self):

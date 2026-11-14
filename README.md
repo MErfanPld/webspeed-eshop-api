@@ -1,260 +1,169 @@
 # WebSpeed E-Shop API
 
-Backend foundation for the **WebSpeed E-Shop** platform.
+Django + Django REST Framework backend for WebSpeed — a multi-store
+e-commerce platform with a visual page builder. It replaces the frontend's
+former Next.js `src/server` layer and keeps its paths, response shapes and
+Persian error messages, so the frontend only needs a new base URL.
 
-This repository contains the Django + Django REST Framework backend.  
-It is designed as a clean, production-ready foundation and does **not** include business features yet (products, orders, cart, etc.). Those will be added in later phases.
+- **Stack:** Django 5.1, DRF 3.15, SimpleJWT, PostgreSQL 16, Redis 7, MinIO / S3 (django-storages), drf-spectacular
+- **Docs:** Swagger UI at `/api/docs/`, OpenAPI schema at `/api/schema/`
+- **Errors:** always `{"error": "<Persian message>", "details": <object|null>}`
 
----
-
-## Stack
-
-| Technology              | Purpose                          |
-|-------------------------|----------------------------------|
-| Django 5.x              | Web framework                    |
-| Django REST Framework   | REST API                         |
-| PostgreSQL 16           | Database                         |
-| Docker / Docker Compose | Containerization                 |
-| drf-spectacular         | OpenAPI / Swagger documentation  |
-| django-cors-headers     | CORS handling                    |
-| django-environ          | Environment configuration        |
-
----
-
-## Requirements
-
-- Docker & Docker Compose
-- (Optional for local non-Docker development) Python 3.12+, PostgreSQL 16
-
----
-
-## Environment Variables
-
-Copy the example file and adjust values:
+## Quick start (Docker)
 
 ```bash
 cp .env.example .env
 ```
 
-| Variable                 | Description                                      | Default (dev)                          |
-|--------------------------|--------------------------------------------------|----------------------------------------|
-| `SECRET_KEY`             | Django secret key                                | (required)                             |
-| `DEBUG`                  | Enable debug mode                                | `True`                                 |
-| `ALLOWED_HOSTS`          | Comma-separated allowed hosts                    | `localhost,127.0.0.1,web`              |
-| `POSTGRES_DB`            | PostgreSQL database name                         | `webspeed`                             |
-| `POSTGRES_USER`          | PostgreSQL user                                  | `webspeed`                             |
-| `POSTGRES_PASSWORD`      | PostgreSQL password                              | `webspeed`                             |
-| `POSTGRES_HOST`          | PostgreSQL host                                  | `db`                                   |
-| `POSTGRES_PORT`          | PostgreSQL port                                  | `5432`                                 |
-| `DATABASE_URL`           | Full database URL (used by django-environ)       | `postgres://webspeed:webspeed@db:5432/webspeed` |
-| `CORS_ALLOWED_ORIGINS`   | Comma-separated allowed CORS origins             | `http://localhost:3000,...`            |
-| `CORS_ALLOW_ALL_ORIGINS` | Allow all origins (never `True` in production)   | `False`                                |
+```bash
+docker compose up --build
+```
 
-> **Important:** Never commit the `.env` file.
+On start the container runs `migrate` and `seed` (both idempotent). The seed
+creates the default store, the owner account (`ADMIN_EMAIL` / `ADMIN_PASSWORD`;
+in development without a password: `admin12345`), the default pages, 8
+categories and 20 products.
 
----
+- API: http://localhost:8000/api/v1/health
+- Swagger: http://localhost:8000/api/docs/
+- MinIO console: http://localhost:9001
 
-## Docker Setup
-
-### 1. Build & Start
+Production: set real secrets in `.env` (`SECRET_KEY` ≥ 50 chars,
+`CORS_ALLOWED_ORIGINS`, `ALLOWED_HOSTS`, S3 credentials, `ADMIN_PASSWORD`) and run
 
 ```bash
-docker compose build
-docker compose up -d
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
-### 2. Check services
+Put a TLS reverse proxy in front of the API and set `TRUST_PROXY_HEADERS=True`
+only behind it.
+
+## Local development (without Docker)
 
 ```bash
-docker compose ps
+python -m venv .venv && . .venv/bin/activate
 ```
-
-### 3. Run Django checks
 
 ```bash
-docker compose exec web python manage.py check
+pip install -r requirements/development.txt
 ```
-
-### 4. Apply migrations
 
 ```bash
-docker compose exec web python manage.py migrate
+export DJANGO_SETTINGS_MODULE=config.settings.development STORAGE_BACKEND=local SECRET_KEY=dev DATABASE_URL=postgres://webspeed:webspeed@localhost:5432/webspeed REDIS_URL=redis://localhost:6379/0
 ```
-
-### 5. Create superuser (optional)
 
 ```bash
-docker compose exec web python manage.py createsuperuser
+python manage.py migrate && python manage.py seed && python manage.py runserver
 ```
 
----
-
-## Database
-
-- PostgreSQL runs in the `db` service.
-- Data is stored in a **persistent Docker volume** (`postgres_data`).
-- Connection is configured via environment variables / `DATABASE_URL`.
-
----
-
-## Migrations
-
-After any model change:
+## Quality
 
 ```bash
-docker compose exec web python manage.py makemigrations
-docker compose exec web python manage.py migrate
+ruff check .
 ```
-
-Initial migrations for the custom User model are included.
-
----
-
-## Development
-
-The development server is started automatically by Docker Compose:
-
-```
-http://localhost:8000
-```
-
-Useful commands:
 
 ```bash
-# Django shell
-docker compose exec web python manage.py shell
-
-# Create superuser
-docker compose exec web python manage.py createsuperuser
-
-# Collect static (production-like)
-docker compose exec web python manage.py collectstatic --noinput
-
-# View logs
-docker compose logs -f web
-docker compose logs -f db
+DJANGO_SETTINGS_MODULE=config.settings.test python manage.py test tests
 ```
 
-Settings modules:
-
-- Development: `config.settings.development`
-- Production: `config.settings.production`
-
----
-
-## Swagger / OpenAPI
-
-Interactive API documentation is available at:
-
-| Endpoint       | Description              |
-|----------------|--------------------------|
-| `/api/docs/`   | Swagger UI               |
-| `/api/schema/` | OpenAPI schema (JSON/YAML) |
-
-After starting the stack open:
-
-```
-http://localhost:8000/api/docs/
+```bash
+python manage.py spectacular --validate --fail-on-warn --file /tmp/schema.yml
 ```
 
----
+CI (`.github/workflows/ci.yml`) runs lint, Django checks, migration check,
+OpenAPI validation, tests (PostgreSQL + Redis), seeding twice and
+`check --deploy` with production settings.
 
-## Health Check
-
-```
-GET /api/v1/health/
-```
-
-**Successful response (200):**
-
-```json
-{
-  "status": "ok",
-  "database": "ok"
-}
-```
-
-**Database unavailable (503):**
-
-```json
-{
-  "status": "error",
-  "database": "unavailable"
-}
-```
-
----
-
-## Project Structure
+## Project structure
 
 ```
-.
-├── manage.py
-├── config/
-│   ├── settings/
-│   │   ├── base.py          # Shared settings
-│   │   ├── development.py   # Development overrides
-│   │   └── production.py    # Production overrides
-│   ├── urls.py
-│   ├── asgi.py
-│   └── wsgi.py
-├── apps/
-│   └── users/               # Custom User model + Health check
-│       ├── models.py
-│       ├── managers.py
-│       ├── admin.py
-│       ├── views.py
-│       └── urls.py
-├── requirements/
-│   ├── base.txt
-│   ├── development.txt
-│   └── production.txt
-├── Dockerfile
-├── docker-compose.yml
-├── .env.example
-├── .gitignore
-└── README.md
+config/settings/{base,development,production,test}.py
+apps/
+  core/            errors, JWT header/cookie auth, validators, JSON-Schema block
+                   validation, Redis rate limiting, pagination, seed (+ data/*.json)
+  users/           custom User (email login, Argon2)
+  authentication/  login · refresh · logout · me
+  stores/          Store, StoreMember (owner/admin/editor), tenancy resolution
+  pages/           builder pages: draft/publish, slug rules
+  catalog/         Product, Category
+  media/           MediaFile (public bucket)
+  customers/       Customer (per store, by mobile)
+  orders/          Order, checkout, tracking, private receipts
+  stats/           dashboard
+tests/             API tests (auth, tenancy, pages, catalog, media, orders)
 ```
 
----
+`apps/core/data/block_definitions.json` and `seed.json` are exported from the
+frontend sources (`src/builder/registry/block-definitions.ts`, `src/config/home-page.ts`,
+`src/data/*`). Re-export them when block definitions change.
 
-## Custom User Model
+## Authentication
 
-Email is the primary identifier (`USERNAME_FIELD = "email"`).
+| Client | How |
+|---|---|
+| Bearer | `POST /auth/login` → `{access, refresh}`; send `Authorization: Bearer <access>`; `POST /auth/refresh {refresh}` |
+| Browser (cookies) | Login also sets httpOnly `ws_access` / `ws_refresh` cookies. Use `credentials: "include"`. Unsafe requests authenticated by cookie must come from an origin in `CORS_ALLOWED_ORIGINS`/`CSRF_TRUSTED_ORIGINS` (Origin check = CSRF protection) |
 
-Fields:
+- Access token 15 min, refresh 7 days; refresh tokens rotate and the old one is blacklisted. Logout blacklists the refresh token.
+- Admin endpoints act on the **current store**: header `X-Store-Id` or cookie `ws_store` (set by `POST /admin/store {storeId}`), limited to stores the user belongs to; otherwise the user's first store.
+- Roles: `editor` < `admin` < `owner`. Editors can edit pages, media and view orders; deleting pages/media and managing catalog, orders status and store settings need `admin`.
+- Public storefront endpoints resolve the store from the `X-Store-Host` header (the storefront's host, sent by the frontend server) or `Host`, matching a store's custom `domain`; otherwise `DEFAULT_STORE_SLUG` or the first store.
 
-- `id`
-- `email` (unique)
-- `password`
-- `first_name`
-- `last_name`
-- `is_active`
-- `is_staff`
-- `is_superuser`
-- `created_at`
-- `updated_at`
+## Endpoints (`/api/v1`)
 
-Django Admin is fully configured for the custom User.
+| Method | Path | Auth | Request → Response |
+|---|---|---|---|
+| GET | `/health` | — | `{status, database}` |
+| POST | `/auth/login` | — (8/15 min per IP+email) | `{email, password}` → `{user, access, refresh}` |
+| POST | `/auth/refresh` | refresh | `{refresh?}` → `{access, refresh}` |
+| POST | `/auth/logout` | — | `{refresh?}` → `{ok}` |
+| GET | `/auth/me` | user | `{user, store, memberships}` |
+| GET | `/admin/store` | editor | `{store, role, memberships}` |
+| PATCH | `/admin/store` | admin | `{name?, domain?, settings?}` → `{store}` |
+| POST | `/admin/store` | member | `{storeId}` switch · `{create: {name, slug, domain?}}` → `{store, storeId}` |
+| GET | `/admin/stores` | user | `{stores}` |
+| GET | `/store` | — | `{store}` public info (contact, payment, shipping) |
+| GET / POST | `/admin/pages` | editor | `{pages}` · `{name, slug, type?}` → `{page}` |
+| GET / PUT / DELETE | `/admin/pages/<id>` | editor (DELETE: admin) | `{page}` · `{page: ManagedPage}` → `{page}` |
+| POST | `/admin/pages/<id>/publish` · `/unpublish` · `/duplicate` | editor | `{page}` |
+| GET | `/pages?id=…` or `?slug=…` | — | `{page}` (published snapshot only) |
+| GET / POST | `/admin/products` | editor / admin | `{products}` · product → `{product}` |
+| GET / PUT / DELETE | `/admin/products/<id>` | editor / admin | `{product}` |
+| GET / POST | `/admin/categories` | editor / admin | `{categories}` · `{name, slug, image?, sort?}` → `{category}` |
+| PUT / DELETE | `/admin/categories/<id>` | admin | `{category}` |
+| GET | `/products?page&pageSize&category&gender&q&sort&featured&new&minPrice&maxPrice&ids` | — | `{products, pagination}` |
+| GET | `/products/<slug>` · `/categories` | — | `{product}` · `{categories}` |
+| GET / POST | `/admin/media` | editor | `{items}` · multipart `file` → `{item}` |
+| DELETE | `/admin/media/<id>` | admin | `{ok}` |
+| POST | `/orders` | — (10/10 min per IP) | multipart `data`=JSON `{customer, items[{productId,size,color,quantity}]}`, `receipt`=image → `{order: {number, total, status}}` |
+| GET | `/orders/track?number&phone` | — (20/10 min per IP) | `{order}` (no personal data) |
+| GET | `/admin/orders?status&q` | editor | `{orders}` |
+| GET / PATCH | `/admin/orders/<id>` | editor / admin | `{order}` · `{status, note?}` → `{order}` |
+| GET | `/admin/orders/<id>/receipt` | editor | `{url, expiresIn}` signed URL |
+| GET | `/admin/customers` | editor | `{customers}` |
+| GET | `/admin/stats?days=30` | editor | dashboard KPIs |
 
----
+Shapes (`ManagedPage`, `Product`, `Order`, …) are identical to the frontend
+TypeScript types (camelCase); the full schema is in Swagger.
 
-## Notes for next phases
+## Business rules (ported from the frontend `src/server`)
 
-This repository currently contains **only the foundation**.  
-The following are intentionally **not** implemented yet:
+- **Pages:** slug normalization and validation, reserved routes (`/admin`, `/cart`, `/checkout`, `/products/*`, `/api/*`, `/_*`, …), unique slug per store, fixed slugs for `home` and header/footer layout documents, protected system pages, unique `-copy-N` slugs on duplicate, saving a draft never changes the published snapshot, layout documents are never routable.
+- **Blocks:** validated against JSON Schemas generated from the frontend block registry (types, enums, responsive values, arrays), unknown types rejected, children only in container blocks, max nesting depth 4.
+- **URLs:** `javascript:`, `data:`, `vbscript:`, `//host` … removed from all URL fields (`href`, `image`, `src`, …) in pages, products, categories and settings.
+- **Orders:** server-side prices and shipping (`flatRate`, `freeOver`), variant validation, stock reserved with row locks in one transaction, cancellation restores stock and reopening reserves it again, tracking requires the buyer's phone, customers created/updated per store by phone.
+- **Files:** type detected from magic bytes (PNG/JPEG/GIF/WEBP; SVG rejected), 5 MB limit; media in the public bucket, receipts in the private bucket served only through short-lived signed URLs.
+- **Rate limits (Redis):** login, checkout, tracking.
 
-- Products / Categories
-- Orders / Payments
-- Cart
-- Customer-facing APIs
-- JWT Authentication
-- Media storage
-- CMS / Page Builder API
-- Frontend integration
+## Frontend migration notes
 
----
+1. Set the API base URL for `HttpPageRepository` (`/api/admin/pages` → `<API>/api/v1/admin/pages`); paths and payloads are unchanged.
+2. Send `credentials: "include"` (cross-origin) or call the API through a same-origin proxy.
+3. Replace `src/server/services/*` calls in server components with `fetch(<API>/api/v1/...)`, forwarding the storefront host as `X-Store-Host`.
+4. Receipts: the admin UI should request `/admin/orders/<id>/receipt` and open the returned `url`.
+5. Admin login: `/auth/login`, then `/auth/refresh` on 401.
+6. The SQLite layer, `src/middleware.ts` session check and `src/app/api/*` become obsolete once the frontend points at this API.
 
-## License
+## Environment variables
 
-Proprietary – WebSpeed project.
+See `.env.example` (all variables are documented there).

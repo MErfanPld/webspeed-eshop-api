@@ -1,0 +1,1389 @@
+{
+ "store": {
+  "name": "WebSpeed",
+  "tagline": "سادگی، کیفیت، استایل",
+  "description": "فروشگاه اینترنتی پوشاک مینیمال و مدرن. کیفیت بالا، طراحی ساده و استایل ماندگار برای زندگی روزمره.",
+  "phone": "۰۲۱-۱۲۳۴۵۶۷۸",
+  "email": "info@webspeed.ir",
+  "address": "تهران، خیابان ولیعصر، پلاک ۱۲۳",
+  "workingHours": "شنبه تا پنج‌شنبه ۹ تا ۱۸",
+  "social": {
+   "instagram": "#",
+   "twitter": "#"
+  },
+  "payment": {
+   "cardNumber": "۶۰۳۷-۹۹۱۲-۳۴۵۶-۷۸۹۰",
+   "cardHolder": "شرکت وب‌اسپید"
+  }
+ },
+ "home": {
+  "id": "home",
+  "slug": "/",
+  "title": "WebSpeed | فروشگاه اینترنتی",
+  "description": "خرید آنلاین با ارسال سریع و ضمانت اصالت کالا",
+  "blocks": [
+   {
+    "id": "hero-main",
+    "type": "hero",
+    "data": {
+     "autoplay": true,
+     "intervalMs": 5000,
+     "slides": [
+      {
+       "id": "s1",
+       "image": "/placeholders/hero-1.svg",
+       "eyebrow": "مجموعه جدید",
+       "title": "خرید هوشمند، ارسال سریع",
+       "subtitle": "هزاران محصول اصل با بهترین قیمت و ضمانت اصالت",
+       "ctaLabel": "مشاهده محصولات",
+       "ctaHref": "/products?sort=newest",
+       "align": "right"
+      },
+      {
+       "id": "s2",
+       "image": "/placeholders/hero-2.svg",
+       "eyebrow": "پیشنهاد ویژه",
+       "title": "تا ۴۰٪ تخفیف فصلی",
+       "subtitle": "روی منتخب پوشاک و اکسسوری — فرصت محدود",
+       "ctaLabel": "خرید با تخفیف",
+       "ctaHref": "/products?discount=1",
+       "align": "right"
+      },
+      {
+       "id": "s3",
+       "image": "/placeholders/hero-3.svg",
+       "eyebrow": "ارسال رایگان",
+       "title": "سفارش بالای ۲٫۵ میلیون",
+       "subtitle": "تحویل سریع در سراسر کشور",
+       "ctaLabel": "شروع خرید",
+       "ctaHref": "/products",
+       "align": "center"
+      }
+     ]
+    }
+   },
+   {
+    "id": "features-top",
+    "type": "features",
+    "data": {
+     "items": [
+      {
+       "id": "f1",
+       "icon": "truck",
+       "title": "ارسال سریع",
+       "description": "۲ تا ۴ روز کاری"
+      },
+      {
+       "id": "f2",
+       "icon": "shield",
+       "title": "ضمانت اصالت",
+       "description": "کالای ۱۰۰٪ اصل"
+      },
+      {
+       "id": "f3",
+       "icon": "refresh",
+       "title": "۷ روز بازگشت",
+       "description": "بدون شرط اضافه"
+      },
+      {
+       "id": "f4",
+       "icon": "headset",
+       "title": "پشتیبانی آنلاین",
+       "description": "شنبه تا پنجشنبه"
+      }
+     ]
+    }
+   },
+   {
+    "id": "cats",
+    "type": "category-grid",
+    "data": {
+     "title": "دسته‌بندی‌ها",
+     "subtitle": "خرید سریع بر اساس نیاز شما",
+     "columns": 6,
+     "categories": [
+      {
+       "id": "c1",
+       "name": "تی‌شرت",
+       "slug": "t-shirts",
+       "image": "/placeholders/cat-1.svg",
+       "count": 48
+      },
+      {
+       "id": "c2",
+       "name": "هودی",
+       "slug": "hoodies",
+       "image": "/placeholders/cat-2.svg",
+       "count": 32
+      },
+      {
+       "id": "c3",
+       "name": "شلوار",
+       "slug": "pants",
+       "image": "/placeholders/cat-3.svg",
+       "count": 56
+      },
+      {
+       "id": "c4",
+       "name": "جین",
+       "slug": "jeans",
+       "image": "/placeholders/cat-4.svg",
+       "count": 28
+      },
+      {
+       "id": "c5",
+       "name": "کت",
+       "slug": "jackets",
+       "image": "/placeholders/cat-1.svg",
+       "count": 22
+      },
+      {
+       "id": "c6",
+       "name": "اکسسوری",
+       "slug": "accessories",
+       "image": "/placeholders/cat-2.svg",
+       "count": 40
+      }
+     ]
+    }
+   },
+   {
+    "id": "featured",
+    "type": "product-slider",
+    "data": {
+     "title": "پیشنهاد شگفت‌انگیز",
+     "subtitle": "منتخب امروز WebSpeed",
+     "source": "featured",
+     "limit": 8,
+     "viewAllHref": "/products?sort=featured"
+    }
+   },
+   {
+    "id": "promo-1",
+    "type": "promo-banner",
+    "data": {
+     "title": "فروش ویژه آخر هفته",
+     "subtitle": "تا ۳۰٪ تخفیف روی کالکشن پاییز — فقط تا پایان هفته",
+     "image": "/placeholders/banner-1.svg",
+     "ctaLabel": "مشاهده پیشنهادها",
+     "ctaHref": "/products?discount=1",
+     "variant": "full"
+    }
+   },
+   {
+    "id": "bestsellers",
+    "type": "product-slider",
+    "data": {
+     "title": "پرفروش‌ترین‌ها",
+     "subtitle": "محبوب‌ترین انتخاب مشتریان",
+     "source": "bestsellers",
+     "limit": 8,
+     "viewAllHref": "/products?sort=bestsellers"
+    }
+   },
+   {
+    "id": "new-arrivals",
+    "type": "product-slider",
+    "data": {
+     "title": "تازه‌رسیده‌ها",
+     "subtitle": "جدیدترین محصولات فروشگاه",
+     "source": "new",
+     "limit": 8,
+     "viewAllHref": "/products?sort=newest"
+    }
+   },
+   {
+    "id": "flash",
+    "type": "flash-sale",
+    "data": {
+     "title": "فروش فوری",
+     "endsAt": "",
+     "recurring": "daily",
+     "limit": 4
+    }
+   },
+   {
+    "id": "brands",
+    "type": "brand-slider",
+    "data": {
+     "title": "برندهای منتخب",
+     "brands": [
+      {
+       "id": "b1",
+       "name": "Nova",
+       "logo": "/placeholders/brand-1.svg"
+      },
+      {
+       "id": "b2",
+       "name": "Aether",
+       "logo": "/placeholders/brand-2.svg"
+      },
+      {
+       "id": "b3",
+       "name": "Lumen",
+       "logo": "/placeholders/brand-3.svg"
+      },
+      {
+       "id": "b4",
+       "name": "Orbit",
+       "logo": "/placeholders/brand-4.svg"
+      },
+      {
+       "id": "b5",
+       "name": "Pulse",
+       "logo": "/placeholders/brand-1.svg"
+      },
+      {
+       "id": "b6",
+       "name": "Form",
+       "logo": "/placeholders/brand-2.svg"
+      }
+     ]
+    }
+   },
+   {
+    "id": "testimonials",
+    "type": "testimonials",
+    "data": {
+     "title": "نظر مشتریان",
+     "items": [
+      {
+       "id": "t1",
+       "name": "سارا م.",
+       "role": "تهران",
+       "rating": 5,
+       "text": "ارسال سریع بود و کیفیت کالا دقیقاً مطابق توضیحات سایت.",
+       "avatar": "/placeholders/avatar.svg"
+      },
+      {
+       "id": "t2",
+       "name": "علی ر.",
+       "role": "اصفهان",
+       "rating": 5,
+       "text": "سایزبندی دقیق و بسته‌بندی مرتب. حتماً دوباره خرید می‌کنم.",
+       "avatar": "/placeholders/avatar.svg"
+      },
+      {
+       "id": "t3",
+       "name": "مریم ک.",
+       "role": "شیراز",
+       "rating": 4,
+       "text": "پشتیبانی پاسخگو بود و روند خرید خیلی ساده انجام شد.",
+       "avatar": "/placeholders/avatar.svg"
+      }
+     ]
+    }
+   },
+   {
+    "id": "faq",
+    "type": "faq",
+    "data": {
+     "title": "سوالات متداول",
+     "items": [
+      {
+       "id": "q1",
+       "question": "زمان ارسال چقدر است؟",
+       "answer": "سفارش‌های تهران معمولاً ۱ تا ۲ روز کاری و شهرستان ۲ تا ۴ روز کاری تحویل داده می‌شوند."
+      },
+      {
+       "id": "q2",
+       "question": "شرایط بازگشت کالا چیست؟",
+       "answer": "تا ۷ روز پس از دریافت، در صورت سالم بودن کالا و برچسب، امکان بازگشت وجود دارد."
+      },
+      {
+       "id": "q3",
+       "question": "روش پرداخت چگونه است؟",
+       "answer": "پرداخت به‌صورت کارت‌به‌کارت انجام می‌شود و پس از تأیید رسید، سفارش پردازش می‌گردد."
+      }
+     ]
+    }
+   },
+   {
+    "id": "newsletter",
+    "type": "newsletter",
+    "data": {
+     "title": "از تخفیف‌ها جا نمانید",
+     "subtitle": "با عضویت در خبرنامه، پیشنهادهای ویژه را زودتر دریافت کنید",
+     "placeholder": "ایمیل شما",
+     "buttonLabel": "عضویت"
+    }
+   }
+  ]
+ },
+ "products": [
+  {
+   "id": "1",
+   "slug": "oversized-cotton-tee-black",
+   "name": "تی‌شرت اورسایز نخی مشکی",
+   "description": "تی‌شرت اورسایز با پارچه نخی ۱۰۰٪ درجه یک. برش آزاد و راحت برای استایل روزمره و خیابانی. دوخت تمیز و کیفیت ماندگار.",
+   "price": 1890000,
+   "compareAtPrice": 2490000,
+   "category": "t-shirts",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-1.svg",
+    "/placeholders/product-2.svg",
+    "/placeholders/product-3.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL"
+   ],
+   "colors": [
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "سفید",
+     "hex": "#F5F5F5"
+    },
+    {
+     "name": "خاکستری",
+     "hex": "#6B7280"
+    }
+   ],
+   "featured": true,
+   "newArrival": true,
+   "stock": 42,
+   "rating": 4.4,
+   "reviewCount": 24,
+   "freeShipping": true,
+   "brand": "UrbanWeave"
+  },
+  {
+   "id": "2",
+   "slug": "wide-leg-denim-jeans",
+   "name": "شلوار جین بگ",
+   "description": "شلوار جین بگ با برش گشاد و راحت. پارچه دنیم با کیفیت بالا و رنگ ثابت. مناسب استایل مینیمال و خیابانی.",
+   "price": 3290000,
+   "compareAtPrice": 3990000,
+   "category": "jeans",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-2.svg",
+    "/placeholders/product-3.svg"
+   ],
+   "sizes": [
+    "28",
+    "30",
+    "32",
+    "34",
+    "36"
+   ],
+   "colors": [
+    {
+     "name": "آبی روشن",
+     "hex": "#93C5FD"
+    },
+    {
+     "name": "آبی تیره",
+     "hex": "#1E3A8A"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 28,
+   "rating": 3.9,
+   "reviewCount": 64,
+   "freeShipping": true,
+   "brand": "Aether"
+  },
+  {
+   "id": "3",
+   "slug": "linen-shirt-beige",
+   "name": "پیراهن لینن کرم",
+   "description": "پیراهن لینن سبک و خنک با بافت طبیعی. مناسب تابستان و استایل رسمی-کژوال. دکمه‌های چوبی و دوخت ظریف.",
+   "price": 2450000,
+   "category": "shirts",
+   "gender": "men",
+   "images": [
+    "/placeholders/product-3.svg",
+    "/placeholders/product-4.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "colors": [
+    {
+     "name": "کرم",
+     "hex": "#E8D5B7"
+    },
+    {
+     "name": "سفید",
+     "hex": "#FFFFFF"
+    },
+    {
+     "name": "زیتونی",
+     "hex": "#6B7F5C"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 35,
+   "rating": 3.7,
+   "reviewCount": 228,
+   "freeShipping": false,
+   "brand": "WebSpeed"
+  },
+  {
+   "id": "4",
+   "slug": "crop-top-white",
+   "name": "کراپ تاپ سفید",
+   "description": "کراپ تاپ ساده و شیک با پارچه نرم. مناسب لایه‌بندی و استایل روزمره. طراحی مینیمال با کیفیت بالا.",
+   "price": 890000,
+   "compareAtPrice": 1190000,
+   "category": "t-shirts",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-4.svg",
+    "/placeholders/product-5.svg"
+   ],
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "سفید",
+     "hex": "#FFFFFF"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "صورتی",
+     "hex": "#F9A8D4"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 50,
+   "rating": 3.9,
+   "reviewCount": 270,
+   "freeShipping": true,
+   "brand": "Aether"
+  },
+  {
+   "id": "5",
+   "slug": "hoodie-oversized-gray",
+   "name": "هودی اورسایز خاکستری",
+   "description": "هودی اورسایز با پنبه سنگین و کلاه بزرگ. مناسب پاییز و زمستان. دوخت داخلی نرم و جیب کانگورویی.",
+   "price": 2790000,
+   "category": "hoodies",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-5.svg",
+    "/placeholders/product-6.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL"
+   ],
+   "colors": [
+    {
+     "name": "خاکستری",
+     "hex": "#9CA3AF"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "کرم",
+     "hex": "#D6C6B0"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 22,
+   "rating": 3.9,
+   "reviewCount": 291,
+   "freeShipping": true,
+   "brand": "Nova Wear"
+  },
+  {
+   "id": "6",
+   "slug": "pleated-skirt-black",
+   "name": "دامن پلیسه مشکی",
+   "description": "دامن پلیسه میدی با پارچه سبک و روان. مناسب استایل رسمی و کژوال. کمربند قابل تنظیم.",
+   "price": 2190000,
+   "category": "dresses",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-6.svg",
+    "/placeholders/product-1.svg"
+   ],
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "کرم",
+     "hex": "#E8D5B7"
+    },
+    {
+     "name": "خاکستری",
+     "hex": "#6B7280"
+    }
+   ],
+   "featured": false,
+   "newArrival": false,
+   "stock": 18,
+   "rating": 4.4,
+   "reviewCount": 15,
+   "freeShipping": true,
+   "brand": "UrbanWeave"
+  },
+  {
+   "id": "7",
+   "slug": "cargo-pants-olive",
+   "name": "شلوار کارگو زیتونی",
+   "description": "شلوار کارگو با جیب‌های کاربردی و پارچه مقاوم. مناسب استایل خیابانی و روزمره. برش راحت و مدرن.",
+   "price": 2590000,
+   "compareAtPrice": 3100000,
+   "category": "pants",
+   "gender": "men",
+   "images": [
+    "/placeholders/product-1.svg",
+    "/placeholders/product-2.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "colors": [
+    {
+     "name": "زیتونی",
+     "hex": "#556B2F"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "خاکی",
+     "hex": "#C3B091"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 30,
+   "rating": 4.5,
+   "reviewCount": 186,
+   "freeShipping": false,
+   "brand": "UrbanWeave"
+  },
+  {
+   "id": "8",
+   "slug": "knit-cardigan-cream",
+   "name": "کاردیگان بافت کرم",
+   "description": "کاردیگان بافت نرم و گرم با طراحی مینیمال. مناسب لایه‌بندی پاییزی. دکمه‌های ظریف و یقه گرد.",
+   "price": 3100000,
+   "category": "jackets",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-2.svg",
+    "/placeholders/product-3.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "کرم",
+     "hex": "#F5E6D3"
+    },
+    {
+     "name": "خاکستری",
+     "hex": "#A8A29E"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 15,
+   "rating": 4.8,
+   "reviewCount": 184,
+   "freeShipping": false,
+   "brand": "Nova Wear"
+  },
+  {
+   "id": "9",
+   "slug": "classic-oxford-shirt",
+   "name": "پیراهن آکسفورد کلاسیک",
+   "description": "پیراهن آکسفورد با بافت محکم و ظاهر شیک. مناسب محیط کار و استایل رسمی. کیفیت بالا و دوام طولانی.",
+   "price": 2650000,
+   "category": "shirts",
+   "gender": "men",
+   "images": [
+    "/placeholders/product-3.svg",
+    "/placeholders/product-4.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "colors": [
+    {
+     "name": "آبی روشن",
+     "hex": "#BFDBFE"
+    },
+    {
+     "name": "سفید",
+     "hex": "#FFFFFF"
+    },
+    {
+     "name": "صورتی",
+     "hex": "#FBCFE8"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 40,
+   "rating": 3.7,
+   "reviewCount": 188,
+   "freeShipping": true,
+   "brand": "WebSpeed"
+  },
+  {
+   "id": "10",
+   "slug": "relaxed-fit-chino",
+   "name": "شلوار چینو ریلکس",
+   "description": "شلوار چینو با برش راحت و پارچه نرم. مناسب استایل کژوال و نیمه‌رسمی. جزئیات تمیز و کیفیت ممتاز.",
+   "price": 2350000,
+   "category": "pants",
+   "gender": "men",
+   "images": [
+    "/placeholders/product-4.svg",
+    "/placeholders/product-5.svg"
+   ],
+   "sizes": [
+    "30",
+    "32",
+    "34",
+    "36"
+   ],
+   "colors": [
+    {
+     "name": "بژ",
+     "hex": "#D4C4A8"
+    },
+    {
+     "name": "زیتونی",
+     "hex": "#6B7F5C"
+    },
+    {
+     "name": "سرمه‌ای",
+     "hex": "#1E3A5F"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 25,
+   "rating": 4.5,
+   "reviewCount": 286,
+   "freeShipping": false,
+   "brand": "Nova Wear"
+  },
+  {
+   "id": "11",
+   "slug": "silk-blend-blouse",
+   "name": "بلوز ابریشمی",
+   "description": "بلوز با ترکیب ابریشم و ویسکوز. نرم، لطیف و مناسب استایل شیک. طراحی ساده با جزئیات ظریف.",
+   "price": 2890000,
+   "compareAtPrice": 3490000,
+   "category": "shirts",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-5.svg",
+    "/placeholders/product-6.svg"
+   ],
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "کرم",
+     "hex": "#F5E6D3"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "سفید",
+     "hex": "#FFFFFF"
+    }
+   ],
+   "featured": true,
+   "newArrival": true,
+   "stock": 20,
+   "rating": 3.7,
+   "reviewCount": 162,
+   "freeShipping": true,
+   "brand": "Aether"
+  },
+  {
+   "id": "12",
+   "slug": "denim-jacket-classic",
+   "name": "کت جین کلاسیک",
+   "description": "کت جین با برش کلاسیک و پارچه دنیم با کیفیت. مناسب لایه‌بندی در تمام فصل‌ها. جزئیات فلزی و دوخت محکم.",
+   "price": 3590000,
+   "category": "jackets",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-6.svg",
+    "/placeholders/product-1.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "colors": [
+    {
+     "name": "آبی",
+     "hex": "#3B82F6"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 18,
+   "rating": 4.8,
+   "reviewCount": 197,
+   "freeShipping": true,
+   "brand": "WebSpeed"
+  },
+  {
+   "id": "13",
+   "slug": "ribbed-tank-top",
+   "name": "تاپ ریب",
+   "description": "تاپ ریب با بافت ظریف و کشسانی مناسب. مناسب لایه‌بندی یا استفاده مستقل در فصل گرم.",
+   "price": 790000,
+   "category": "t-shirts",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-1.svg",
+    "/placeholders/product-2.svg"
+   ],
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "سفید",
+     "hex": "#FFFFFF"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "بژ",
+     "hex": "#E8D5B7"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 45,
+   "rating": 3.7,
+   "reviewCount": 128,
+   "freeShipping": true,
+   "brand": "WebSpeed"
+  },
+  {
+   "id": "14",
+   "slug": "wool-blend-coat",
+   "name": "پالتو پشمی",
+   "description": "پالتو با ترکیب پشم و طراحی مینیمال. گرم، شیک و مناسب زمستان. یقه برگردان و دکمه‌های بزرگ.",
+   "price": 5890000,
+   "compareAtPrice": 7200000,
+   "category": "jackets",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-2.svg",
+    "/placeholders/product-3.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "کرم",
+     "hex": "#E8D5B7"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "خاکستری",
+     "hex": "#6B7280"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 12,
+   "rating": 4.7,
+   "reviewCount": 63,
+   "freeShipping": false,
+   "brand": "Nova Wear"
+  },
+  {
+   "id": "15",
+   "slug": "slim-fit-trousers",
+   "name": "شلوار اسلیم فیت",
+   "description": "شلوار اسلیم با پارچه کشی و ظاهر مدرن. مناسب محیط کار و استایل شهری. جزئیات تمیز و دوخت دقیق.",
+   "price": 2490000,
+   "category": "pants",
+   "gender": "men",
+   "images": [
+    "/placeholders/product-3.svg",
+    "/placeholders/product-4.svg"
+   ],
+   "sizes": [
+    "30",
+    "32",
+    "34",
+    "36"
+   ],
+   "colors": [
+    {
+     "name": "سرمه‌ای",
+     "hex": "#1E3A5F"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "خاکستری",
+     "hex": "#6B7280"
+    }
+   ],
+   "featured": false,
+   "newArrival": false,
+   "stock": 33,
+   "rating": 4.4,
+   "reviewCount": 198,
+   "freeShipping": false,
+   "brand": "Minimal Co"
+  },
+  {
+   "id": "16",
+   "slug": "midi-dress-floral",
+   "name": "پیراهن میدی",
+   "description": "پیراهن میدی با طراحی ساده و شیک. پارچه سبک و روان مناسب بهار و تابستان. یقه گرد و آستین کوتاه.",
+   "price": 2750000,
+   "category": "dresses",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-4.svg",
+    "/placeholders/product-5.svg"
+   ],
+   "sizes": [
+    "XS",
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "کرم",
+     "hex": "#F5E6D3"
+    },
+    {
+     "name": "آبی",
+     "hex": "#93C5FD"
+    }
+   ],
+   "featured": true,
+   "newArrival": true,
+   "stock": 22,
+   "rating": 3.9,
+   "reviewCount": 148,
+   "freeShipping": true,
+   "brand": "WebSpeed"
+  },
+  {
+   "id": "17",
+   "slug": "crewneck-sweatshirt",
+   "name": "سویشرت کرو",
+   "description": "سویشرت با یقه گرد و پارچه پنبه‌ای نرم. مناسب استایل روزمره و لایه‌بندی. دوخت تمیز و کیفیت بالا.",
+   "price": 2190000,
+   "category": "hoodies",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-5.svg",
+    "/placeholders/product-6.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L",
+    "XL"
+   ],
+   "colors": [
+    {
+     "name": "خاکستری",
+     "hex": "#9CA3AF"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "سفید",
+     "hex": "#F5F5F5"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 38,
+   "rating": 4.4,
+   "reviewCount": 99,
+   "freeShipping": true,
+   "brand": "UrbanWeave"
+  },
+  {
+   "id": "18",
+   "slug": "leather-belt-classic",
+   "name": "کمربند چرمی کلاسیک",
+   "description": "کمربند چرم طبیعی با سگک فلزی مینیمال. مناسب استایل رسمی و کژوال. کیفیت بالا و ماندگاری طولانی.",
+   "price": 1290000,
+   "category": "accessories",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-6.svg",
+    "/placeholders/product-1.svg"
+   ],
+   "sizes": [
+    "S",
+    "M",
+    "L"
+   ],
+   "colors": [
+    {
+     "name": "قهوه‌ای",
+     "hex": "#8B4513"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    }
+   ],
+   "featured": false,
+   "newArrival": false,
+   "stock": 60,
+   "rating": 3.8,
+   "reviewCount": 206,
+   "freeShipping": false,
+   "brand": "Aether"
+  },
+  {
+   "id": "19",
+   "slug": "high-waist-jeans",
+   "name": "شلوار جین کمر بلند",
+   "description": "شلوار جین کمر بلند با برش مدرن. پارچه دنیم با کشسانی مناسب و ظاهر شیک. مناسب استایل روزمره.",
+   "price": 2990000,
+   "compareAtPrice": 3590000,
+   "category": "jeans",
+   "gender": "women",
+   "images": [
+    "/placeholders/product-1.svg",
+    "/placeholders/product-2.svg"
+   ],
+   "sizes": [
+    "26",
+    "28",
+    "30",
+    "32"
+   ],
+   "colors": [
+    {
+     "name": "آبی تیره",
+     "hex": "#1E3A8A"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    }
+   ],
+   "featured": true,
+   "newArrival": false,
+   "stock": 27,
+   "rating": 3.9,
+   "reviewCount": 178,
+   "freeShipping": true,
+   "brand": "WebSpeed"
+  },
+  {
+   "id": "20",
+   "slug": "minimal-tote-bag",
+   "name": "کیف توت مینیمال",
+   "description": "کیف توت با طراحی مینیمال و پارچه محکم. مناسب استفاده روزانه. فضای داخلی جادار و دسته‌های راحت.",
+   "price": 1590000,
+   "category": "accessories",
+   "gender": "unisex",
+   "images": [
+    "/placeholders/product-2.svg",
+    "/placeholders/product-3.svg"
+   ],
+   "sizes": [
+    "One Size"
+   ],
+   "colors": [
+    {
+     "name": "کرم",
+     "hex": "#E8D5B7"
+    },
+    {
+     "name": "مشکی",
+     "hex": "#111111"
+    },
+    {
+     "name": "خاکی",
+     "hex": "#C3B091"
+    }
+   ],
+   "featured": false,
+   "newArrival": true,
+   "stock": 35,
+   "rating": 3.9,
+   "reviewCount": 28,
+   "freeShipping": true,
+   "brand": "Nova Wear"
+  }
+ ],
+ "categories": [
+  {
+   "id": "all",
+   "name": "همه",
+   "slug": "all"
+  },
+  {
+   "id": "t-shirts",
+   "name": "تی‌شرت",
+   "slug": "t-shirts",
+   "image": "/placeholders/cat-1.svg",
+   "children": [
+    {
+     "name": "تی‌شرت ساده",
+     "slug": "t-shirts"
+    },
+    {
+     "name": "تی‌شرت اورسایز",
+     "slug": "t-shirts"
+    },
+    {
+     "name": "پولوشرت",
+     "slug": "t-shirts"
+    }
+   ]
+  },
+  {
+   "id": "shirts",
+   "name": "پیراهن",
+   "slug": "shirts",
+   "image": "/placeholders/cat-2.svg",
+   "children": [
+    {
+     "name": "پیراهن رسمی",
+     "slug": "shirts"
+    },
+    {
+     "name": "پیراهن کژوال",
+     "slug": "shirts"
+    },
+    {
+     "name": "لینن",
+     "slug": "shirts"
+    }
+   ]
+  },
+  {
+   "id": "hoodies",
+   "name": "هودی و سویشرت",
+   "slug": "hoodies",
+   "image": "/placeholders/cat-3.svg",
+   "children": [
+    {
+     "name": "هودی",
+     "slug": "hoodies"
+    },
+    {
+     "name": "سویشرت",
+     "slug": "hoodies"
+    }
+   ]
+  },
+  {
+   "id": "jackets",
+   "name": "کت و پالتو",
+   "slug": "jackets",
+   "image": "/placeholders/cat-4.svg",
+   "children": [
+    {
+     "name": "کت جین",
+     "slug": "jackets"
+    },
+    {
+     "name": "پالتو",
+     "slug": "jackets"
+    }
+   ]
+  },
+  {
+   "id": "pants",
+   "name": "شلوار",
+   "slug": "pants",
+   "image": "/placeholders/cat-1.svg",
+   "children": [
+    {
+     "name": "شلوار پارچه‌ای",
+     "slug": "pants"
+    },
+    {
+     "name": "کارگو",
+     "slug": "pants"
+    }
+   ]
+  },
+  {
+   "id": "jeans",
+   "name": "جین",
+   "slug": "jeans",
+   "image": "/placeholders/cat-2.svg",
+   "children": [
+    {
+     "name": "جین بگ",
+     "slug": "jeans"
+    },
+    {
+     "name": "جین اسلیم",
+     "slug": "jeans"
+    }
+   ]
+  },
+  {
+   "id": "accessories",
+   "name": "اکسسوری",
+   "slug": "accessories",
+   "image": "/placeholders/cat-3.svg",
+   "children": [
+    {
+     "name": "کیف",
+     "slug": "accessories"
+    },
+    {
+     "name": "کمربند",
+     "slug": "accessories"
+    }
+   ]
+  }
+ ],
+ "defaults": {
+  "header": {
+   "id": "header-mwgx8u4j-9qaoyz",
+   "type": "header",
+   "data": {
+    "logoText": "WebSpeed",
+    "sticky": true,
+    "showSearch": true,
+    "showCart": true,
+    "showAccount": true,
+    "showWishlist": false,
+    "showCta": false,
+    "ctaLabel": "خرید",
+    "ctaHref": "/products",
+    "background": "#ffffff",
+    "textColor": "#111111",
+    "borderColor": "#E8E8E8",
+    "navItems": [
+     {
+      "id": "item-mwgx8u4j-sdvz2n",
+      "label": "خانه",
+      "href": "/"
+     },
+     {
+      "id": "item-mwgx8u4j-zsnc55",
+      "label": "مردانه",
+      "href": "/products?gender=men"
+     },
+     {
+      "id": "item-mwgx8u4j-2hbie3",
+      "label": "زنانه",
+      "href": "/products?gender=women"
+     },
+     {
+      "id": "item-mwgx8u4j-c4hx6o",
+      "label": "درباره ما",
+      "href": "/about"
+     }
+    ]
+   },
+   "enabled": true
+  },
+  "announcement-bar": {
+   "id": "announcement-bar-mwgx8u4j-pi082c",
+   "type": "announcement-bar",
+   "data": {
+    "text": "ارسال رایگان برای سفارش‌های بالای ۲٬۵۰۰٬۰۰۰ تومان",
+    "href": "/products",
+    "background": "#0f172a",
+    "textColor": "#ffffff"
+   },
+   "enabled": true
+  },
+  "footer": {
+   "id": "footer-mwgx8u4j-2r9khk",
+   "type": "footer",
+   "data": {
+    "brand": "WebSpeed",
+    "description": "فروشگاه اینترنتی پوشاک مینیمال.",
+    "phone": "021-12345678",
+    "email": "info@webspeed.ir",
+    "address": "تهران",
+    "showNewsletter": true,
+    "newsletterTitle": "خبرنامه",
+    "newsletterPlaceholder": "ایمیل شما",
+    "background": "#0f172a",
+    "textColor": "#f8fafc",
+    "copyright": "© 2026 WebSpeed",
+    "columns": [
+     {
+      "id": "item-mwgx8u4j-v7zwlu",
+      "title": "فروشگاه",
+      "links": [
+       {
+        "id": "item-mwgx8u4j-jnowos",
+        "label": "محصولات",
+        "href": "/products"
+       },
+       {
+        "id": "item-mwgx8u4j-gmw8lw",
+        "label": "مردانه",
+        "href": "/products?gender=men"
+       }
+      ]
+     },
+     {
+      "id": "item-mwgx8u4j-rwj10k",
+      "title": "پشتیبانی",
+      "links": [
+       {
+        "id": "item-mwgx8u4j-xlvtdk",
+        "label": "تماس",
+        "href": "/contact"
+       },
+       {
+        "id": "item-mwgx8u4j-hy08y5",
+        "label": "درباره",
+        "href": "/about"
+       }
+      ]
+     }
+    ],
+    "socials": [
+     {
+      "id": "item-mwgx8u4j-zt7kj4",
+      "label": "اینستاگرام",
+      "href": "#"
+     },
+     {
+      "id": "item-mwgx8u4j-3j4u9g",
+      "label": "تلگرام",
+      "href": "#"
+     }
+    ]
+   },
+   "enabled": true
+  },
+  "contact-form": {
+   "id": "contact-form-mwgx8u4j-n2ae3x",
+   "type": "contact-form",
+   "data": {
+    "title": "تماس با ما",
+    "subtitle": "پیام خود را برای ما بفرستید",
+    "buttonLabel": "ارسال پیام",
+    "fields": [
+     {
+      "id": "text-mwgx8u4j-hyfu9s",
+      "label": "نام",
+      "name": "name",
+      "type": "text",
+      "placeholder": "نام شما",
+      "required": true
+     },
+     {
+      "id": "email-mwgx8u4j-wz9kwd",
+      "label": "ایمیل",
+      "name": "email",
+      "type": "email",
+      "placeholder": "email@example.com",
+      "required": true
+     },
+     {
+      "id": "textarea-mwgx8u4j-k8kt05",
+      "label": "پیام",
+      "name": "message",
+      "type": "textarea",
+      "placeholder": "متن پیام...",
+      "required": true
+     }
+    ]
+   },
+   "enabled": true
+  }
+ }
+}

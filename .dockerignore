@@ -16,3 +16,4 @@ venv
 staticfiles
 media
 .DS_Store
+var

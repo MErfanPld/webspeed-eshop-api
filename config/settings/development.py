@@ -1,11 +1,7 @@
-"""
-Django development settings for WebSpeed E-Shop API.
-"""
+"""Development settings."""
 from .base import *  # noqa: F401, F403
+from .base import env
 
 DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
-
-# More permissive CORS in development (still controlled by env)
-# Do not force CORS_ALLOW_ALL_ORIGINS = True; use .env
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "web"])
+JWT_COOKIE_SECURE = env.bool("JWT_COOKIE_SECURE", default=False)

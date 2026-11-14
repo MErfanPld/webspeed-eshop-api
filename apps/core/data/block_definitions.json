@@ -1,0 +1,2628 @@
+{
+ "definitions": [
+  {
+   "type": "announcement-bar",
+   "name": "Announcement Bar",
+   "nameFa": "نوار اعلان",
+   "category": "header",
+   "description": "نوار باریک بالای سایت",
+   "icon": "Megaphone",
+   "defaultData": {
+    "text": "ارسال رایگان برای سفارش‌های بالای ۲٬۵۰۰٬۰۰۰ تومان",
+    "href": "/products",
+    "background": "#0f172a",
+    "textColor": "#ffffff"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "متن",
+     "path": "text"
+    },
+    {
+     "type": "url",
+     "label": "لینک",
+     "path": "href"
+    },
+    {
+     "type": "color",
+     "label": "پس‌زمینه",
+     "path": "background",
+     "group": "ظاهر"
+    },
+    {
+     "type": "color",
+     "label": "رنگ متن",
+     "path": "textColor",
+     "group": "ظاهر"
+    }
+   ]
+  },
+  {
+   "type": "header",
+   "name": "Main Header",
+   "nameFa": "هدر اصلی",
+   "category": "header",
+   "description": "لوگو، منو، جستجو، سبد",
+   "icon": "PanelTop",
+   "defaultData": {
+    "logoText": "WebSpeed",
+    "sticky": true,
+    "showSearch": true,
+    "showCart": true,
+    "showAccount": true,
+    "showWishlist": false,
+    "showCta": false,
+    "ctaLabel": "خرید",
+    "ctaHref": "/products",
+    "background": "#ffffff",
+    "textColor": "#111111",
+    "borderColor": "#E8E8E8",
+    "navItems": [
+     {
+      "id": "nav-1",
+      "label": "خانه",
+      "href": "/"
+     },
+     {
+      "id": "nav-2",
+      "label": "مردانه",
+      "href": "/products?gender=men"
+     },
+     {
+      "id": "nav-3",
+      "label": "زنانه",
+      "href": "/products?gender=women"
+     },
+     {
+      "id": "nav-4",
+      "label": "درباره ما",
+      "href": "/about"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "لوگو",
+     "path": "logoText",
+     "group": "برند"
+    },
+    {
+     "type": "color",
+     "label": "پس‌زمینه",
+     "path": "background",
+     "group": "ظاهر"
+    },
+    {
+     "type": "color",
+     "label": "رنگ متن",
+     "path": "textColor",
+     "group": "ظاهر"
+    },
+    {
+     "type": "color",
+     "label": "رنگ حاشیه",
+     "path": "borderColor",
+     "group": "ظاهر"
+    },
+    {
+     "type": "boolean",
+     "label": "چسبان (Sticky)",
+     "path": "sticky",
+     "group": "رفتار"
+    },
+    {
+     "type": "boolean",
+     "label": "جستجو",
+     "path": "showSearch",
+     "group": "اقدامات"
+    },
+    {
+     "type": "boolean",
+     "label": "سبد خرید",
+     "path": "showCart",
+     "group": "اقدامات"
+    },
+    {
+     "type": "boolean",
+     "label": "حساب کاربری",
+     "path": "showAccount",
+     "group": "اقدامات"
+    },
+    {
+     "type": "boolean",
+     "label": "علاقه‌مندی",
+     "path": "showWishlist",
+     "group": "اقدامات"
+    },
+    {
+     "type": "boolean",
+     "label": "دکمه CTA",
+     "path": "showCta",
+     "group": "اقدامات"
+    },
+    {
+     "type": "text",
+     "label": "متن CTA",
+     "path": "ctaLabel",
+     "group": "اقدامات"
+    },
+    {
+     "type": "url",
+     "label": "لینک CTA",
+     "path": "ctaHref",
+     "group": "اقدامات"
+    },
+    {
+     "type": "array",
+     "label": "منو",
+     "path": "navItems",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "label"
+      },
+      {
+       "type": "url",
+       "label": "لینک",
+       "path": "href"
+      }
+     ],
+     "defaultItem": {
+      "label": "لینک",
+      "href": "/"
+     },
+     "group": "منو"
+    }
+   ]
+  },
+  {
+   "type": "footer",
+   "name": "Footer",
+   "nameFa": "فوتر",
+   "category": "footer",
+   "description": "پاورقی با ستون لینک، تماس و شبکه‌های اجتماعی",
+   "icon": "PanelBottom",
+   "defaultData": {
+    "brand": "WebSpeed",
+    "description": "فروشگاه اینترنتی پوشاک مینیمال.",
+    "phone": "021-12345678",
+    "email": "info@webspeed.ir",
+    "address": "تهران",
+    "showNewsletter": true,
+    "newsletterTitle": "خبرنامه",
+    "newsletterPlaceholder": "ایمیل شما",
+    "background": "#0f172a",
+    "textColor": "#f8fafc",
+    "copyright": "© 2026 WebSpeed",
+    "columns": [
+     {
+      "id": "col-1",
+      "title": "فروشگاه",
+      "links": [
+       {
+        "id": "l-1",
+        "label": "محصولات",
+        "href": "/products"
+       },
+       {
+        "id": "l-2",
+        "label": "مردانه",
+        "href": "/products?gender=men"
+       }
+      ]
+     },
+     {
+      "id": "col-2",
+      "title": "پشتیبانی",
+      "links": [
+       {
+        "id": "l-3",
+        "label": "تماس",
+        "href": "/contact"
+       },
+       {
+        "id": "l-4",
+        "label": "درباره",
+        "href": "/about"
+       }
+      ]
+     }
+    ],
+    "socials": [
+     {
+      "id": "s-1",
+      "label": "اینستاگرام",
+      "href": "#"
+     },
+     {
+      "id": "s-2",
+      "label": "تلگرام",
+      "href": "#"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "برند",
+     "path": "brand",
+     "group": "برند"
+    },
+    {
+     "type": "textarea",
+     "label": "توضیح",
+     "path": "description",
+     "group": "برند"
+    },
+    {
+     "type": "text",
+     "label": "تلفن",
+     "path": "phone",
+     "group": "تماس"
+    },
+    {
+     "type": "text",
+     "label": "ایمیل",
+     "path": "email",
+     "group": "تماس"
+    },
+    {
+     "type": "text",
+     "label": "آدرس",
+     "path": "address",
+     "group": "تماس"
+    },
+    {
+     "type": "boolean",
+     "label": "نمایش خبرنامه",
+     "path": "showNewsletter",
+     "group": "خبرنامه"
+    },
+    {
+     "type": "text",
+     "label": "عنوان خبرنامه",
+     "path": "newsletterTitle",
+     "group": "خبرنامه"
+    },
+    {
+     "type": "text",
+     "label": "Placeholder خبرنامه",
+     "path": "newsletterPlaceholder",
+     "group": "خبرنامه"
+    },
+    {
+     "type": "color",
+     "label": "پس‌زمینه",
+     "path": "background",
+     "group": "ظاهر"
+    },
+    {
+     "type": "color",
+     "label": "رنگ متن",
+     "path": "textColor",
+     "group": "ظاهر"
+    },
+    {
+     "type": "text",
+     "label": "کپی‌رایت",
+     "path": "copyright"
+    },
+    {
+     "type": "array",
+     "label": "ستون‌ها",
+     "path": "columns",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "title"
+      },
+      {
+       "type": "array",
+       "label": "لینک‌ها",
+       "path": "links",
+       "itemFields": [
+        {
+         "type": "text",
+         "label": "عنوان",
+         "path": "label"
+        },
+        {
+         "type": "url",
+         "label": "لینک",
+         "path": "href"
+        }
+       ],
+       "defaultItem": {
+        "label": "لینک",
+        "href": "/"
+       }
+      }
+     ],
+     "defaultItem": {
+      "title": "ستون",
+      "links": []
+     },
+     "group": "لینک‌ها"
+    },
+    {
+     "type": "array",
+     "label": "شبکه‌های اجتماعی",
+     "path": "socials",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "label"
+      },
+      {
+       "type": "url",
+       "label": "لینک",
+       "path": "href"
+      }
+     ],
+     "defaultItem": {
+      "label": "شبکه",
+      "href": "#"
+     },
+     "group": "لینک‌ها"
+    }
+   ]
+  },
+  {
+   "type": "section",
+   "name": "Section",
+   "nameFa": "سکشن",
+   "category": "layout",
+   "description": "بخش تمام‌عرض با پس‌زمینه و فاصله",
+   "icon": "RectangleHorizontal",
+   "defaultData": {
+    "paddingY": {
+     "desktop": 48,
+     "mobile": 24
+    },
+    "background": "transparent",
+    "children": []
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "فاصله عمودی",
+     "path": "paddingY",
+     "min": 0,
+     "max": 240,
+     "group": "چیدمان",
+     "responsive": true
+    },
+    {
+     "type": "color",
+     "label": "پس‌زمینه",
+     "path": "background",
+     "group": "ظاهر"
+    }
+   ],
+   "nesting": {
+    "canHaveChildren": true,
+    "maxDepth": 4
+   }
+  },
+  {
+   "type": "container",
+   "name": "Container",
+   "nameFa": "کانتینر",
+   "category": "layout",
+   "description": "محدود کردن عرض محتوا",
+   "icon": "Square",
+   "defaultData": {
+    "maxWidth": 1280,
+    "children": []
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "حداکثر عرض",
+     "path": "maxWidth",
+     "min": 320,
+     "max": 1920,
+     "group": "چیدمان",
+     "responsive": true
+    }
+   ],
+   "nesting": {
+    "canHaveChildren": true,
+    "maxDepth": 4
+   }
+  },
+  {
+   "type": "columns",
+   "name": "Columns",
+   "nameFa": "ستون‌ها",
+   "category": "layout",
+   "description": "چیدمان چندستونه واکنش‌گرا",
+   "icon": "Columns3",
+   "defaultData": {
+    "columns": {
+     "desktop": 2,
+     "tablet": 2,
+     "mobile": 1
+    },
+    "gap": 24,
+    "children": []
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "تعداد ستون",
+     "path": "columns",
+     "min": 1,
+     "max": 6,
+     "group": "چیدمان",
+     "responsive": true
+    },
+    {
+     "type": "responsiveNumber",
+     "label": "فاصله",
+     "path": "gap",
+     "min": 0,
+     "max": 96,
+     "group": "چیدمان",
+     "responsive": true
+    }
+   ],
+   "nesting": {
+    "canHaveChildren": true,
+    "maxDepth": 4
+   }
+  },
+  {
+   "type": "stack",
+   "name": "Stack",
+   "nameFa": "پشته عمودی",
+   "category": "layout",
+   "description": "چیدمان عمودی با فاصله",
+   "icon": "Rows3",
+   "defaultData": {
+    "gap": 16,
+    "children": []
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "فاصله",
+     "path": "gap",
+     "min": 0,
+     "max": 96,
+     "group": "چیدمان",
+     "responsive": true
+    }
+   ],
+   "nesting": {
+    "canHaveChildren": true,
+    "maxDepth": 4
+   }
+  },
+  {
+   "type": "grid",
+   "name": "Grid",
+   "nameFa": "گرید",
+   "category": "layout",
+   "description": "شبکه با تعداد ستون ثابت",
+   "icon": "LayoutGrid",
+   "defaultData": {
+    "columns": {
+     "desktop": 3,
+     "tablet": 2,
+     "mobile": 1
+    },
+    "gap": 16,
+    "children": []
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "تعداد ستون",
+     "path": "columns",
+     "min": 1,
+     "max": 6,
+     "group": "چیدمان",
+     "responsive": true
+    },
+    {
+     "type": "responsiveNumber",
+     "label": "فاصله",
+     "path": "gap",
+     "min": 0,
+     "max": 96,
+     "group": "چیدمان",
+     "responsive": true
+    }
+   ],
+   "nesting": {
+    "canHaveChildren": true,
+    "maxDepth": 4
+   }
+  },
+  {
+   "type": "flex",
+   "name": "Flex Row",
+   "nameFa": "ردیف افقی",
+   "category": "layout",
+   "description": "چیدمان افقی",
+   "icon": "Columns2",
+   "defaultData": {
+    "gap": 16,
+    "justify": "flex-start",
+    "align": "center",
+    "children": []
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "فاصله",
+     "path": "gap",
+     "min": 0,
+     "max": 96,
+     "group": "چیدمان",
+     "responsive": true
+    },
+    {
+     "type": "select",
+     "label": "چینش افقی",
+     "path": "justify",
+     "options": [
+      {
+       "label": "شروع",
+       "value": "flex-start"
+      },
+      {
+       "label": "وسط",
+       "value": "center"
+      },
+      {
+       "label": "پایان",
+       "value": "flex-end"
+      },
+      {
+       "label": "فاصله‌دار",
+       "value": "space-between"
+      }
+     ]
+    },
+    {
+     "type": "select",
+     "label": "چینش عمودی",
+     "path": "align",
+     "options": [
+      {
+       "label": "بالا",
+       "value": "flex-start"
+      },
+      {
+       "label": "وسط",
+       "value": "center"
+      },
+      {
+       "label": "پایین",
+       "value": "flex-end"
+      }
+     ]
+    }
+   ],
+   "nesting": {
+    "canHaveChildren": true,
+    "maxDepth": 4
+   }
+  },
+  {
+   "type": "spacer",
+   "name": "Spacer",
+   "nameFa": "فاصله‌گذار",
+   "category": "layout",
+   "description": "فضای خالی",
+   "icon": "MoveVertical",
+   "defaultData": {
+    "height": {
+     "desktop": 48,
+     "mobile": 24
+    }
+   },
+   "schema": [
+    {
+     "type": "responsiveNumber",
+     "label": "ارتفاع",
+     "path": "height",
+     "min": 4,
+     "max": 320,
+     "group": "چیدمان",
+     "responsive": true
+    }
+   ]
+  },
+  {
+   "type": "divider",
+   "name": "Divider",
+   "nameFa": "جداکننده",
+   "category": "layout",
+   "description": "خط افقی",
+   "icon": "Minus",
+   "defaultData": {
+    "color": "#E8E8E8",
+    "thickness": 1
+   },
+   "schema": [
+    {
+     "type": "color",
+     "label": "رنگ",
+     "path": "color",
+     "group": "ظاهر"
+    },
+    {
+     "type": "number",
+     "label": "ضخامت",
+     "path": "thickness",
+     "min": 1,
+     "max": 12,
+     "group": "ظاهر"
+    }
+   ]
+  },
+  {
+   "type": "hero",
+   "name": "Hero Slider",
+   "nameFa": "بنر اصلی (اسلایدر)",
+   "category": "marketing",
+   "description": "اسلایدر بزرگ با عنوان و دکمه",
+   "icon": "GalleryHorizontal",
+   "defaultData": {
+    "autoplay": true,
+    "intervalMs": 5000,
+    "slides": [
+     {
+      "id": "slide-1",
+      "image": "/placeholders/hero-1.svg",
+      "eyebrow": "فصل جدید",
+      "title": "عنوان بنر",
+      "subtitle": "توضیح کوتاه",
+      "ctaLabel": "مشاهده",
+      "ctaHref": "/products",
+      "align": "right"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "boolean",
+     "label": "پخش خودکار",
+     "path": "autoplay",
+     "group": "رفتار"
+    },
+    {
+     "type": "number",
+     "label": "فاصله اسلایدها (ms)",
+     "path": "intervalMs",
+     "min": 2000,
+     "max": 15000,
+     "group": "رفتار"
+    },
+    {
+     "type": "array",
+     "label": "اسلایدها",
+     "path": "slides",
+     "itemFields": [
+      {
+       "type": "image",
+       "label": "تصویر",
+       "path": "image"
+      },
+      {
+       "type": "text",
+       "label": "بالای عنوان",
+       "path": "eyebrow"
+      },
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "title"
+      },
+      {
+       "type": "textarea",
+       "label": "زیرعنوان",
+       "path": "subtitle"
+      },
+      {
+       "type": "text",
+       "label": "متن دکمه",
+       "path": "ctaLabel"
+      },
+      {
+       "type": "url",
+       "label": "لینک دکمه",
+       "path": "ctaHref"
+      },
+      {
+       "type": "select",
+       "label": "چینش",
+       "path": "align",
+       "options": [
+        {
+         "label": "راست",
+         "value": "right"
+        },
+        {
+         "label": "وسط",
+         "value": "center"
+        },
+        {
+         "label": "چپ",
+         "value": "left"
+        }
+       ]
+      }
+     ],
+     "defaultItem": {
+      "image": "/placeholders/hero-1.svg",
+      "title": "اسلاید جدید",
+      "align": "right"
+     }
+    }
+   ]
+  },
+  {
+   "type": "promo-banner",
+   "name": "Promo Banner",
+   "nameFa": "بنر تبلیغاتی",
+   "category": "marketing",
+   "description": "بنر عریض با دکمه",
+   "icon": "Megaphone",
+   "defaultData": {
+    "title": "فروش ویژه",
+    "subtitle": "تا ۳۰٪ تخفیف",
+    "image": "/placeholders/banner-1.svg",
+    "ctaLabel": "مشاهده",
+    "ctaHref": "/products"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "textarea",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "image",
+     "label": "تصویر",
+     "path": "image"
+    },
+    {
+     "type": "text",
+     "label": "متن دکمه",
+     "path": "ctaLabel"
+    },
+    {
+     "type": "url",
+     "label": "لینک دکمه",
+     "path": "ctaHref"
+    }
+   ]
+  },
+  {
+   "type": "flash-sale",
+   "name": "Flash Sale",
+   "nameFa": "فروش فوری",
+   "category": "marketing",
+   "description": "شمارش معکوس + محصولات",
+   "icon": "Timer",
+   "defaultData": {
+    "title": "فروش فوری",
+    "endsAt": "",
+    "recurring": "daily",
+    "limit": 4
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "datetime",
+     "label": "زمان پایان",
+     "path": "endsAt",
+     "group": "زمان"
+    },
+    {
+     "type": "select",
+     "label": "تکرار",
+     "path": "recurring",
+     "options": [
+      {
+       "label": "بدون تکرار",
+       "value": "none"
+      },
+      {
+       "label": "روزانه (تا نیمه‌شب)",
+       "value": "daily"
+      }
+     ],
+     "group": "زمان"
+    },
+    {
+     "type": "number",
+     "label": "تعداد محصول",
+     "path": "limit",
+     "min": 1,
+     "max": 12,
+     "group": "داده"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات (اختیاری)",
+     "path": "productIds",
+     "group": "داده"
+    }
+   ]
+  },
+  {
+   "type": "cta",
+   "name": "Call to Action",
+   "nameFa": "فراخوان (CTA)",
+   "category": "marketing",
+   "description": "عنوان + دکمه",
+   "icon": "MousePointerClick",
+   "defaultData": {
+    "title": "همین حالا شروع کنید",
+    "subtitle": "",
+    "buttonLabel": "مشاهده فروشگاه",
+    "href": "/products"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "textarea",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "text",
+     "label": "متن دکمه",
+     "path": "buttonLabel"
+    },
+    {
+     "type": "url",
+     "label": "لینک",
+     "path": "href"
+    }
+   ]
+  },
+  {
+   "type": "countdown",
+   "name": "Countdown",
+   "nameFa": "شمارش معکوس",
+   "category": "marketing",
+   "description": "تایمر تا یک تاریخ",
+   "icon": "Hourglass",
+   "defaultData": {
+    "title": "زمان باقی‌مانده",
+    "targetDate": ""
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "datetime",
+     "label": "تاریخ هدف",
+     "path": "targetDate"
+    }
+   ]
+  },
+  {
+   "type": "add-to-cart-banner",
+   "name": "Add to Cart Banner",
+   "nameFa": "بنر خرید",
+   "category": "marketing",
+   "description": "بنر کوچک با دکمه خرید",
+   "icon": "ShoppingCart",
+   "defaultData": {
+    "title": "محصول ویژه",
+    "subtitle": "موجود در انبار",
+    "buttonLabel": "افزودن به سبد",
+    "href": "/products"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "text",
+     "label": "متن دکمه",
+     "path": "buttonLabel"
+    },
+    {
+     "type": "url",
+     "label": "لینک",
+     "path": "href"
+    }
+   ]
+  },
+  {
+   "type": "product-grid",
+   "name": "Product Grid",
+   "nameFa": "گرید محصولات",
+   "category": "products",
+   "description": "شبکه محصولات",
+   "icon": "LayoutGrid",
+   "defaultData": {
+    "title": "محصولات",
+    "source": "all",
+    "limit": 8
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "select",
+     "label": "منبع محصولات",
+     "path": "source",
+     "options": [
+      {
+       "label": "همه",
+       "value": "all"
+      },
+      {
+       "label": "ویژه",
+       "value": "featured"
+      },
+      {
+       "label": "جدید",
+       "value": "new"
+      },
+      {
+       "label": "پرفروش",
+       "value": "bestsellers"
+      }
+     ],
+     "group": "داده"
+    },
+    {
+     "type": "number",
+     "label": "تعداد",
+     "path": "limit",
+     "min": 1,
+     "max": 24,
+     "group": "داده"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات دستی (اختیاری)",
+     "path": "productIds",
+     "group": "داده",
+     "description": "در صورت انتخاب، منبع نادیده گرفته می‌شود."
+    }
+   ]
+  },
+  {
+   "type": "product-slider",
+   "name": "Product Slider",
+   "nameFa": "اسلایدر محصولات",
+   "category": "products",
+   "description": "نمایش افقی محصولات",
+   "icon": "GalleryHorizontalEnd",
+   "defaultData": {
+    "title": "محصولات منتخب",
+    "source": "featured",
+    "limit": 8,
+    "viewAllHref": "/products"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "url",
+     "label": "لینک مشاهده همه",
+     "path": "viewAllHref"
+    },
+    {
+     "type": "select",
+     "label": "منبع محصولات",
+     "path": "source",
+     "options": [
+      {
+       "label": "همه",
+       "value": "all"
+      },
+      {
+       "label": "ویژه",
+       "value": "featured"
+      },
+      {
+       "label": "جدید",
+       "value": "new"
+      },
+      {
+       "label": "پرفروش",
+       "value": "bestsellers"
+      }
+     ],
+     "group": "داده"
+    },
+    {
+     "type": "number",
+     "label": "تعداد",
+     "path": "limit",
+     "min": 1,
+     "max": 24,
+     "group": "داده"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات دستی (اختیاری)",
+     "path": "productIds",
+     "group": "داده",
+     "description": "در صورت انتخاب، منبع نادیده گرفته می‌شود."
+    }
+   ]
+  },
+  {
+   "type": "featured-products",
+   "name": "Featured Products",
+   "nameFa": "محصولات ویژه",
+   "category": "products",
+   "description": "گرید محصولات ویژه",
+   "icon": "Star",
+   "defaultData": {
+    "title": "محصولات ویژه",
+    "source": "featured",
+    "limit": 8
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "select",
+     "label": "منبع محصولات",
+     "path": "source",
+     "options": [
+      {
+       "label": "همه",
+       "value": "all"
+      },
+      {
+       "label": "ویژه",
+       "value": "featured"
+      },
+      {
+       "label": "جدید",
+       "value": "new"
+      },
+      {
+       "label": "پرفروش",
+       "value": "bestsellers"
+      }
+     ],
+     "group": "داده"
+    },
+    {
+     "type": "number",
+     "label": "تعداد",
+     "path": "limit",
+     "min": 1,
+     "max": 24,
+     "group": "داده"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات دستی (اختیاری)",
+     "path": "productIds",
+     "group": "داده",
+     "description": "در صورت انتخاب، منبع نادیده گرفته می‌شود."
+    }
+   ]
+  },
+  {
+   "type": "best-sellers",
+   "name": "Best Sellers",
+   "nameFa": "پرفروش‌ها",
+   "category": "products",
+   "description": "اسلایدر پرفروش‌ترین‌ها",
+   "icon": "TrendingUp",
+   "defaultData": {
+    "title": "پرفروش‌ترین‌ها",
+    "source": "bestsellers",
+    "limit": 8,
+    "viewAllHref": "/products?sort=bestsellers"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "url",
+     "label": "لینک مشاهده همه",
+     "path": "viewAllHref"
+    },
+    {
+     "type": "select",
+     "label": "منبع محصولات",
+     "path": "source",
+     "options": [
+      {
+       "label": "همه",
+       "value": "all"
+      },
+      {
+       "label": "ویژه",
+       "value": "featured"
+      },
+      {
+       "label": "جدید",
+       "value": "new"
+      },
+      {
+       "label": "پرفروش",
+       "value": "bestsellers"
+      }
+     ],
+     "group": "داده"
+    },
+    {
+     "type": "number",
+     "label": "تعداد",
+     "path": "limit",
+     "min": 1,
+     "max": 24,
+     "group": "داده"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات دستی (اختیاری)",
+     "path": "productIds",
+     "group": "داده",
+     "description": "در صورت انتخاب، منبع نادیده گرفته می‌شود."
+    }
+   ]
+  },
+  {
+   "type": "new-arrivals",
+   "name": "New Arrivals",
+   "nameFa": "تازه‌ها",
+   "category": "products",
+   "description": "اسلایدر جدیدترین محصولات",
+   "icon": "Sparkles",
+   "defaultData": {
+    "title": "تازه‌رسیده‌ها",
+    "source": "new",
+    "limit": 8,
+    "viewAllHref": "/products?sort=newest"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "url",
+     "label": "لینک مشاهده همه",
+     "path": "viewAllHref"
+    },
+    {
+     "type": "select",
+     "label": "منبع محصولات",
+     "path": "source",
+     "options": [
+      {
+       "label": "همه",
+       "value": "all"
+      },
+      {
+       "label": "ویژه",
+       "value": "featured"
+      },
+      {
+       "label": "جدید",
+       "value": "new"
+      },
+      {
+       "label": "پرفروش",
+       "value": "bestsellers"
+      }
+     ],
+     "group": "داده"
+    },
+    {
+     "type": "number",
+     "label": "تعداد",
+     "path": "limit",
+     "min": 1,
+     "max": 24,
+     "group": "داده"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات دستی (اختیاری)",
+     "path": "productIds",
+     "group": "داده",
+     "description": "در صورت انتخاب، منبع نادیده گرفته می‌شود."
+    }
+   ]
+  },
+  {
+   "type": "related-slider",
+   "name": "Related Products",
+   "nameFa": "محصولات مرتبط",
+   "category": "products",
+   "description": "اسلایدر محصولات انتخابی",
+   "icon": "GitBranch",
+   "defaultData": {
+    "title": "محصولات مرتبط",
+    "productIds": []
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "productIds",
+     "label": "محصولات",
+     "path": "productIds",
+     "group": "داده"
+    }
+   ]
+  },
+  {
+   "type": "category-grid",
+   "name": "Category Grid",
+   "nameFa": "گرید دسته‌بندی",
+   "category": "catalog",
+   "description": "نمایش دسته‌ها",
+   "icon": "FolderTree",
+   "defaultData": {
+    "title": "دسته‌بندی‌ها",
+    "subtitle": "",
+    "columns": 4,
+    "categories": [
+     {
+      "id": "cat-1",
+      "name": "تی‌شرت",
+      "slug": "t-shirts",
+      "image": "/placeholders/cat-1.svg",
+      "count": 12
+     },
+     {
+      "id": "cat-2",
+      "name": "هودی",
+      "slug": "hoodies",
+      "image": "/placeholders/cat-2.svg",
+      "count": 8
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "select",
+     "label": "تعداد ستون (دسکتاپ)",
+     "path": "columns",
+     "options": [
+      {
+       "label": "۲",
+       "value": 2
+      },
+      {
+       "label": "۳",
+       "value": 3
+      },
+      {
+       "label": "۴",
+       "value": 4
+      },
+      {
+       "label": "۶",
+       "value": 6
+      }
+     ],
+     "group": "چیدمان"
+    },
+    {
+     "type": "array",
+     "label": "دسته‌ها",
+     "path": "categories",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "نام",
+       "path": "name"
+      },
+      {
+       "type": "text",
+       "label": "اسلاگ",
+       "path": "slug"
+      },
+      {
+       "type": "image",
+       "label": "تصویر",
+       "path": "image"
+      },
+      {
+       "type": "number",
+       "label": "تعداد",
+       "path": "count",
+       "min": 0
+      }
+     ],
+     "defaultItem": {
+      "name": "دسته",
+      "slug": "",
+      "image": "/placeholders/cat-1.svg"
+     }
+    }
+   ]
+  },
+  {
+   "type": "brand-slider",
+   "name": "Brands",
+   "nameFa": "برندها",
+   "category": "catalog",
+   "description": "لوگوی برندها",
+   "icon": "Award",
+   "defaultData": {
+    "title": "برندهای منتخب",
+    "brands": [
+     {
+      "id": "b1",
+      "name": "Nova",
+      "logo": "/placeholders/brand-1.svg"
+     },
+     {
+      "id": "b2",
+      "name": "Aether",
+      "logo": "/placeholders/brand-2.svg"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "array",
+     "label": "برندها",
+     "path": "brands",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "نام",
+       "path": "name"
+      },
+      {
+       "type": "image",
+       "label": "لوگو",
+       "path": "logo"
+      },
+      {
+       "type": "url",
+       "label": "لینک",
+       "path": "href"
+      }
+     ],
+     "defaultItem": {
+      "name": "برند",
+      "logo": "/placeholders/brand-1.svg"
+     }
+    }
+   ]
+  },
+  {
+   "type": "logo-cloud",
+   "name": "Logo Cloud",
+   "nameFa": "ابر لوگو",
+   "category": "catalog",
+   "description": "نام برندها به‌صورت متنی",
+   "icon": "Cloud",
+   "defaultData": {
+    "title": "مورد اعتماد برندها",
+    "logos": [
+     {
+      "id": "lg-1",
+      "name": "Brand A"
+     },
+     {
+      "id": "lg-2",
+      "name": "Brand B"
+     },
+     {
+      "id": "lg-3",
+      "name": "Brand C"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "array",
+     "label": "لوگوها",
+     "path": "logos",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "نام",
+       "path": "name"
+      }
+     ],
+     "defaultItem": {
+      "name": "Brand"
+     }
+    }
+   ]
+  },
+  {
+   "type": "heading",
+   "name": "Heading",
+   "nameFa": "عنوان",
+   "category": "content",
+   "description": "H1–H4",
+   "icon": "Heading",
+   "defaultData": {
+    "text": "عنوان بخش",
+    "level": 2,
+    "align": "right"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "متن",
+     "path": "text"
+    },
+    {
+     "type": "select",
+     "label": "سطح",
+     "path": "level",
+     "options": [
+      {
+       "label": "H1",
+       "value": 1
+      },
+      {
+       "label": "H2",
+       "value": 2
+      },
+      {
+       "label": "H3",
+       "value": 3
+      },
+      {
+       "label": "H4",
+       "value": 4
+      }
+     ]
+    },
+    {
+     "type": "select",
+     "label": "چینش",
+     "path": "align",
+     "options": [
+      {
+       "label": "راست",
+       "value": "right"
+      },
+      {
+       "label": "وسط",
+       "value": "center"
+      },
+      {
+       "label": "چپ",
+       "value": "left"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "text",
+   "name": "Text",
+   "nameFa": "متن",
+   "category": "content",
+   "description": "پاراگراف",
+   "icon": "Pilcrow",
+   "defaultData": {
+    "text": "متن خود را اینجا بنویسید.",
+    "align": "right"
+   },
+   "schema": [
+    {
+     "type": "textarea",
+     "label": "متن",
+     "path": "text"
+    },
+    {
+     "type": "select",
+     "label": "چینش",
+     "path": "align",
+     "options": [
+      {
+       "label": "راست",
+       "value": "right"
+      },
+      {
+       "label": "وسط",
+       "value": "center"
+      },
+      {
+       "label": "چپ",
+       "value": "left"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "rich-text",
+   "name": "Rich Text",
+   "nameFa": "متن بلند",
+   "category": "content",
+   "description": "متن چندپاراگرافی",
+   "icon": "FileText",
+   "defaultData": {
+    "body": "پاراگراف اول\n\nپاراگراف دوم"
+   },
+   "schema": [
+    {
+     "type": "textarea",
+     "label": "متن",
+     "path": "body"
+    }
+   ]
+  },
+  {
+   "type": "button",
+   "name": "Button",
+   "nameFa": "دکمه",
+   "category": "content",
+   "description": "دکمه لینک‌دار",
+   "icon": "RectangleEllipsis",
+   "defaultData": {
+    "label": "خرید کنید",
+    "href": "/products",
+    "variant": "primary",
+    "align": "start"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "برچسب",
+     "path": "label"
+    },
+    {
+     "type": "url",
+     "label": "لینک",
+     "path": "href"
+    },
+    {
+     "type": "select",
+     "label": "نوع",
+     "path": "variant",
+     "options": [
+      {
+       "label": "اصلی",
+       "value": "primary"
+      },
+      {
+       "label": "ثانویه",
+       "value": "secondary"
+      },
+      {
+       "label": "شفاف",
+       "value": "ghost"
+      }
+     ]
+    },
+    {
+     "type": "select",
+     "label": "چینش",
+     "path": "align",
+     "options": [
+      {
+       "label": "شروع",
+       "value": "start"
+      },
+      {
+       "label": "وسط",
+       "value": "center"
+      },
+      {
+       "label": "پایان",
+       "value": "end"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "image",
+   "name": "Image",
+   "nameFa": "تصویر",
+   "category": "content",
+   "description": "تصویر تکی",
+   "icon": "Image",
+   "defaultData": {
+    "src": "/placeholders/banner-1.svg",
+    "alt": ""
+   },
+   "schema": [
+    {
+     "type": "image",
+     "label": "تصویر",
+     "path": "src"
+    },
+    {
+     "type": "text",
+     "label": "متن جایگزین (Alt)",
+     "path": "alt"
+    }
+   ]
+  },
+  {
+   "type": "video",
+   "name": "Video",
+   "nameFa": "ویدیو",
+   "category": "content",
+   "description": "ویدیو embed (YouTube/Aparat)",
+   "icon": "Video",
+   "defaultData": {
+    "url": "",
+    "title": "ویدیو"
+   },
+   "schema": [
+    {
+     "type": "url",
+     "label": "آدرس embed",
+     "path": "url"
+    },
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    }
+   ]
+  },
+  {
+   "type": "badge",
+   "name": "Badge",
+   "nameFa": "نشان",
+   "category": "content",
+   "description": "برچسب کوچک",
+   "icon": "BadgeCheck",
+   "defaultData": {
+    "text": "جدید"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "متن",
+     "path": "text"
+    }
+   ]
+  },
+  {
+   "type": "quote",
+   "name": "Quote",
+   "nameFa": "نقل قول",
+   "category": "content",
+   "description": "نقل قول",
+   "icon": "Quote",
+   "defaultData": {
+    "text": "کیفیت هرگز تصادفی نیست.",
+    "author": ""
+   },
+   "schema": [
+    {
+     "type": "textarea",
+     "label": "متن",
+     "path": "text"
+    },
+    {
+     "type": "text",
+     "label": "گوینده",
+     "path": "author"
+    }
+   ]
+  },
+  {
+   "type": "stats",
+   "name": "Stats",
+   "nameFa": "آمار",
+   "category": "content",
+   "description": "اعداد کلیدی",
+   "icon": "ChartNoAxesColumn",
+   "defaultData": {
+    "items": [
+     {
+      "id": "st-1",
+      "value": "10k+",
+      "label": "مشتری"
+     },
+     {
+      "id": "st-2",
+      "value": "500+",
+      "label": "محصول"
+     },
+     {
+      "id": "st-3",
+      "value": "98%",
+      "label": "رضایت"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "array",
+     "label": "آیتم‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "مقدار",
+       "path": "value"
+      },
+      {
+       "type": "text",
+       "label": "برچسب",
+       "path": "label"
+      }
+     ],
+     "defaultItem": {
+      "value": "0",
+      "label": "برچسب"
+     }
+    }
+   ]
+  },
+  {
+   "type": "faq",
+   "name": "FAQ",
+   "nameFa": "سوالات متداول",
+   "category": "content",
+   "description": "پرسش و پاسخ",
+   "icon": "HelpCircle",
+   "defaultData": {
+    "title": "سوالات متداول",
+    "items": [
+     {
+      "id": "q-1",
+      "question": "سوال؟",
+      "answer": "پاسخ."
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "array",
+     "label": "سوالات",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "سوال",
+       "path": "question"
+      },
+      {
+       "type": "textarea",
+       "label": "پاسخ",
+       "path": "answer"
+      }
+     ],
+     "defaultItem": {
+      "question": "سوال؟",
+      "answer": ""
+     }
+    }
+   ]
+  },
+  {
+   "type": "accordion",
+   "name": "Accordion",
+   "nameFa": "آکاردئون",
+   "category": "content",
+   "description": "بخش‌های بازشونده",
+   "icon": "ListCollapse",
+   "defaultData": {
+    "title": "",
+    "items": [
+     {
+      "id": "ac-1",
+      "q": "عنوان",
+      "a": "محتوا"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "array",
+     "label": "آیتم‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "q"
+      },
+      {
+       "type": "textarea",
+       "label": "محتوا",
+       "path": "a"
+      }
+     ],
+     "defaultItem": {
+      "q": "عنوان",
+      "a": ""
+     }
+    }
+   ]
+  },
+  {
+   "type": "tabs",
+   "name": "Tabs",
+   "nameFa": "تب‌ها",
+   "category": "content",
+   "description": "محتوای تب‌بندی‌شده",
+   "icon": "PanelsTopLeft",
+   "defaultData": {
+    "tabs": [
+     {
+      "id": "tb-1",
+      "label": "توضیحات",
+      "content": "محتوای تب اول"
+     },
+     {
+      "id": "tb-2",
+      "label": "مشخصات",
+      "content": "محتوای تب دوم"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "array",
+     "label": "تب‌ها",
+     "path": "tabs",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "label"
+      },
+      {
+       "type": "textarea",
+       "label": "محتوا",
+       "path": "content"
+      }
+     ],
+     "defaultItem": {
+      "label": "تب",
+      "content": ""
+     }
+    }
+   ]
+  },
+  {
+   "type": "breadcrumbs",
+   "name": "Breadcrumbs",
+   "nameFa": "مسیر صفحه",
+   "category": "content",
+   "description": "Breadcrumb",
+   "icon": "ChevronsLeft",
+   "defaultData": {
+    "items": [
+     {
+      "id": "bc-1",
+      "label": "خانه",
+      "href": "/"
+     },
+     {
+      "id": "bc-2",
+      "label": "صفحه",
+      "href": ""
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "array",
+     "label": "آیتم‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "label"
+      },
+      {
+       "type": "url",
+       "label": "لینک",
+       "path": "href"
+      }
+     ],
+     "defaultItem": {
+      "label": "صفحه",
+      "href": ""
+     }
+    }
+   ]
+  },
+  {
+   "type": "not-found",
+   "name": "Not Found",
+   "nameFa": "صفحه ۴۰۴",
+   "category": "content",
+   "description": "پیام صفحه یافت نشد",
+   "icon": "FileX",
+   "defaultData": {
+    "code": "404",
+    "message": "صفحه یافت نشد.",
+    "ctaLabel": "بازگشت به خانه",
+    "ctaHref": "/"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "کد",
+     "path": "code"
+    },
+    {
+     "type": "text",
+     "label": "پیام",
+     "path": "message"
+    },
+    {
+     "type": "text",
+     "label": "متن دکمه",
+     "path": "ctaLabel"
+    },
+    {
+     "type": "url",
+     "label": "لینک دکمه",
+     "path": "ctaHref"
+    }
+   ]
+  },
+  {
+   "type": "features",
+   "name": "Features",
+   "nameFa": "ویژگی‌ها",
+   "category": "store",
+   "description": "ارسال سریع، ضمانت، ...",
+   "icon": "Shield",
+   "defaultData": {
+    "items": [
+     {
+      "id": "f-1",
+      "icon": "truck",
+      "title": "ارسال سریع",
+      "description": "۲ تا ۴ روز"
+     },
+     {
+      "id": "f-2",
+      "icon": "shield",
+      "title": "ضمانت اصالت",
+      "description": "کالای اصل"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "array",
+     "label": "آیتم‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "select",
+       "label": "آیکون",
+       "path": "icon",
+       "options": [
+        {
+         "label": "ارسال",
+         "value": "truck"
+        },
+        {
+         "label": "ضمانت",
+         "value": "shield"
+        },
+        {
+         "label": "بازگشت",
+         "value": "refresh"
+        },
+        {
+         "label": "پشتیبانی",
+         "value": "headset"
+        },
+        {
+         "label": "پرداخت",
+         "value": "card"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "title"
+      },
+      {
+       "type": "textarea",
+       "label": "توضیح",
+       "path": "description"
+      }
+     ],
+     "defaultItem": {
+      "icon": "truck",
+      "title": "عنوان",
+      "description": ""
+     }
+    }
+   ]
+  },
+  {
+   "type": "trust-badges",
+   "name": "Trust Badges",
+   "nameFa": "نشان‌های اعتماد",
+   "category": "store",
+   "description": "نمادهای اعتماد",
+   "icon": "ShieldCheck",
+   "defaultData": {
+    "items": [
+     {
+      "id": "tr-1",
+      "title": "نماد اعتماد",
+      "description": ""
+     },
+     {
+      "id": "tr-2",
+      "title": "پرداخت امن",
+      "description": ""
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "array",
+     "label": "آیتم‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "title"
+      },
+      {
+       "type": "text",
+       "label": "توضیح",
+       "path": "description"
+      }
+     ],
+     "defaultItem": {
+      "title": "عنوان"
+     }
+    }
+   ]
+  },
+  {
+   "type": "icon-list",
+   "name": "Icon List",
+   "nameFa": "لیست با آیکون",
+   "category": "store",
+   "description": "لیست مزایا",
+   "icon": "ListChecks",
+   "defaultData": {
+    "items": [
+     {
+      "id": "il-1",
+      "title": "ارسال رایگان",
+      "text": "برای خریدهای بالای ۲.۵ میلیون"
+     },
+     {
+      "id": "il-2",
+      "title": "بازگشت ۷ روزه",
+      "text": ""
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "array",
+     "label": "آیتم‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "عنوان",
+       "path": "title"
+      },
+      {
+       "type": "text",
+       "label": "متن",
+       "path": "text"
+      }
+     ],
+     "defaultItem": {
+      "title": "عنوان",
+      "text": ""
+     }
+    }
+   ]
+  },
+  {
+   "type": "testimonials",
+   "name": "Testimonials",
+   "nameFa": "نظر مشتریان",
+   "category": "store",
+   "description": "نقل قول مشتریان با امتیاز",
+   "icon": "MessageSquareQuote",
+   "defaultData": {
+    "title": "نظر مشتریان",
+    "items": [
+     {
+      "id": "t-1",
+      "name": "سارا م.",
+      "role": "تهران",
+      "rating": 5,
+      "text": "خیلی راضی بودم.",
+      "avatar": "/placeholders/avatar.svg"
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "array",
+     "label": "نظرات",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "نام",
+       "path": "name"
+      },
+      {
+       "type": "text",
+       "label": "نقش/شهر",
+       "path": "role"
+      },
+      {
+       "type": "number",
+       "label": "امتیاز",
+       "path": "rating",
+       "min": 1,
+       "max": 5
+      },
+      {
+       "type": "textarea",
+       "label": "متن",
+       "path": "text"
+      },
+      {
+       "type": "image",
+       "label": "آواتار",
+       "path": "avatar"
+      }
+     ],
+     "defaultItem": {
+      "name": "مشتری",
+      "rating": 5,
+      "text": "",
+      "avatar": "/placeholders/avatar.svg"
+     }
+    }
+   ]
+  },
+  {
+   "type": "reviews",
+   "name": "Reviews",
+   "nameFa": "دیدگاه‌ها",
+   "category": "store",
+   "description": "کارت‌های دیدگاه",
+   "icon": "Star",
+   "defaultData": {
+    "title": "دیدگاه خریداران",
+    "items": [
+     {
+      "id": "rv-1",
+      "name": "علی",
+      "text": "کیفیت عالی.",
+      "rating": 5
+     },
+     {
+      "id": "rv-2",
+      "name": "مریم",
+      "text": "ارسال سریع.",
+      "rating": 4
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "array",
+     "label": "دیدگاه‌ها",
+     "path": "items",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "نام",
+       "path": "name"
+      },
+      {
+       "type": "textarea",
+       "label": "متن",
+       "path": "text"
+      },
+      {
+       "type": "number",
+       "label": "امتیاز",
+       "path": "rating",
+       "min": 1,
+       "max": 5
+      }
+     ],
+     "defaultItem": {
+      "name": "کاربر",
+      "text": "",
+      "rating": 5
+     }
+    }
+   ]
+  },
+  {
+   "type": "newsletter",
+   "name": "Newsletter",
+   "nameFa": "خبرنامه (بنر)",
+   "category": "forms",
+   "description": "بخش عضویت خبرنامه",
+   "icon": "Mail",
+   "defaultData": {
+    "title": "از تخفیف‌ها جا نمانید",
+    "subtitle": "",
+    "placeholder": "ایمیل شما",
+    "buttonLabel": "عضویت"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "textarea",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "text",
+     "label": "Placeholder",
+     "path": "placeholder"
+    },
+    {
+     "type": "text",
+     "label": "دکمه",
+     "path": "buttonLabel"
+    }
+   ]
+  },
+  {
+   "type": "newsletter-form",
+   "name": "Newsletter Form",
+   "nameFa": "فرم خبرنامه",
+   "category": "forms",
+   "description": "فرم ساده خبرنامه",
+   "icon": "MailPlus",
+   "defaultData": {
+    "title": "عضویت در خبرنامه",
+    "subtitle": "",
+    "placeholder": "ایمیل شما",
+    "buttonLabel": "عضویت"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "text",
+     "label": "Placeholder",
+     "path": "placeholder"
+    },
+    {
+     "type": "text",
+     "label": "دکمه",
+     "path": "buttonLabel"
+    }
+   ]
+  },
+  {
+   "type": "contact-form",
+   "name": "Contact Form",
+   "nameFa": "فرم تماس",
+   "category": "forms",
+   "description": "فرم تماس با فیلدهای قابل تنظیم",
+   "icon": "Send",
+   "defaultData": {
+    "title": "تماس با ما",
+    "subtitle": "پیام خود را برای ما بفرستید",
+    "buttonLabel": "ارسال پیام",
+    "fields": [
+     {
+      "id": "cf-1",
+      "label": "نام",
+      "name": "name",
+      "type": "text",
+      "placeholder": "نام شما",
+      "required": true
+     },
+     {
+      "id": "cf-2",
+      "label": "ایمیل",
+      "name": "email",
+      "type": "email",
+      "placeholder": "email@example.com",
+      "required": true
+     },
+     {
+      "id": "cf-3",
+      "label": "پیام",
+      "name": "message",
+      "type": "textarea",
+      "placeholder": "متن پیام...",
+      "required": true
+     }
+    ]
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "زیرعنوان",
+     "path": "subtitle"
+    },
+    {
+     "type": "text",
+     "label": "دکمه",
+     "path": "buttonLabel"
+    },
+    {
+     "type": "array",
+     "label": "فیلدها",
+     "path": "fields",
+     "itemFields": [
+      {
+       "type": "text",
+       "label": "برچسب",
+       "path": "label"
+      },
+      {
+       "type": "text",
+       "label": "نام فیلد",
+       "path": "name"
+      },
+      {
+       "type": "select",
+       "label": "نوع",
+       "path": "type",
+       "options": [
+        {
+         "label": "متن",
+         "value": "text"
+        },
+        {
+         "label": "ایمیل",
+         "value": "email"
+        },
+        {
+         "label": "تلفن",
+         "value": "tel"
+        },
+        {
+         "label": "متن بلند",
+         "value": "textarea"
+        }
+       ]
+      },
+      {
+       "type": "text",
+       "label": "Placeholder",
+       "path": "placeholder"
+      },
+      {
+       "type": "boolean",
+       "label": "الزامی",
+       "path": "required"
+      }
+     ],
+     "defaultItem": {
+      "label": "فیلد",
+      "name": "field",
+      "type": "text",
+      "required": false
+     },
+     "group": "فیلدها"
+    }
+   ]
+  },
+  {
+   "type": "login-form",
+   "name": "Login Form",
+   "nameFa": "فرم ورود",
+   "category": "forms",
+   "description": "ورود با موبایل",
+   "icon": "LogIn",
+   "defaultData": {
+    "title": "ورود / ثبت‌نام",
+    "placeholder": "0912xxxxxxx",
+    "buttonLabel": "دریافت کد"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "عنوان",
+     "path": "title"
+    },
+    {
+     "type": "text",
+     "label": "Placeholder",
+     "path": "placeholder"
+    },
+    {
+     "type": "text",
+     "label": "دکمه",
+     "path": "buttonLabel"
+    }
+   ]
+  },
+  {
+   "type": "search-form",
+   "name": "Search Form",
+   "nameFa": "فرم جستجو",
+   "category": "forms",
+   "description": "جستجوی محصول",
+   "icon": "Search",
+   "defaultData": {
+    "placeholder": "جستجوی محصول...",
+    "buttonLabel": "جستجو"
+   },
+   "schema": [
+    {
+     "type": "text",
+     "label": "Placeholder",
+     "path": "placeholder"
+    },
+    {
+     "type": "text",
+     "label": "دکمه",
+     "path": "buttonLabel"
+    }
+   ]
+  }
+ ],
+ "common": [
+  {
+   "type": "responsiveNumber",
+   "label": "فاصله بالا",
+   "path": "_style.marginTop",
+   "min": 0,
+   "max": 240,
+   "group": "پیشرفته",
+   "responsive": true
+  },
+  {
+   "type": "responsiveNumber",
+   "label": "فاصله پایین",
+   "path": "_style.marginBottom",
+   "min": 0,
+   "max": 240,
+   "group": "پیشرفته",
+   "responsive": true
+  },
+  {
+   "type": "color",
+   "label": "پس‌زمینه بیرونی",
+   "path": "_style.background",
+   "group": "پیشرفته"
+  },
+  {
+   "type": "text",
+   "label": "شناسه لنگر (anchor)",
+   "path": "_anchor",
+   "group": "پیشرفته",
+   "placeholder": "مثلاً offers"
+  }
+ ]
+}

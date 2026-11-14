@@ -1,36 +1,28 @@
-# WebSpeed E-Shop API - Dockerfile
+# WebSpeed E-Shop API
 FROM python:3.12-slim
 
-# Set environment variables
+ARG REQUIREMENTS=production
+
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DJANGO_SETTINGS_MODULE=config.settings.production
 
-# Set work directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
+# psycopg[binary] and argon2-cffi ship wheels: no compiler needed
+COPY requirements/ /app/requirements/
+RUN pip install -r /app/requirements/${REQUIREMENTS}.txt
 
-# Install Python dependencies
-COPY requirements/base.txt /app/requirements/base.txt
-RUN pip install --upgrade pip && \
-    pip install -r /app/requirements/base.txt
-
-# Copy project
 COPY . /app/
 
-# Create non-root user
-RUN adduser --disabled-password --gecos "" appuser && \
-    chown -R appuser:appuser /app
+RUN adduser --disabled-password --gecos "" appuser \
+    && mkdir -p /app/staticfiles /app/var \
+    && chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
 EXPOSE 8000
 
-# Default command (overridden in docker-compose for development)
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "60", "--access-logfile", "-"]

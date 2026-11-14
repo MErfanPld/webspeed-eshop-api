@@ -1,0 +1,11 @@
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = [".venv", "apps/*/migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "DJ"]
+ignore = ["E501", "DJ001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "config", "tests"]

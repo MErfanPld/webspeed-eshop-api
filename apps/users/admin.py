@@ -9,20 +9,20 @@ from .models import User
 class UserAdmin(BaseUserAdmin):
     list_display = (
         "email",
-        "first_name",
+        "name",
         "last_name",
         "is_staff",
         "is_active",
         "created_at",
     )
     list_filter = ("is_staff", "is_superuser", "is_active")
-    search_fields = ("email", "first_name", "last_name")
+    search_fields = ("email", "name")
     ordering = ("-created_at",)
     readonly_fields = ("created_at", "updated_at")
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (_("Personal info"), {"fields": ("name", "first_name", "last_name")}),
         (
             _("Permissions"),
             {
