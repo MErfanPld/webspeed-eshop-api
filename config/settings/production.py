@@ -2,12 +2,14 @@
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *  # noqa: F401, F403
-from .base import CORS_ALLOWED_ORIGINS, SECRET_KEY, SMS_BACKEND, env
+from .base import CORS_ALLOWED_ORIGINS, SECRET_KEY, SIMPLE_JWT, SMS_BACKEND, env
 
 DEBUG = False
 
 if len(SECRET_KEY) < 50 or SECRET_KEY.startswith("change-me"):
     raise ImproperlyConfigured("SECRET_KEY must be a random string of at least 50 characters.")
+if len(SIMPLE_JWT["SIGNING_KEY"]) < 32:
+    raise ImproperlyConfigured("JWT signing key (JWT_SIGNING_KEY or SECRET_KEY) must be at least 32 characters.")
 if not CORS_ALLOWED_ORIGINS:
     raise ImproperlyConfigured("CORS_ALLOWED_ORIGINS must list the frontend origin(s).")
 

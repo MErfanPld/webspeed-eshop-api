@@ -79,3 +79,24 @@ class AuthTests(ApiTestCase):
 
         self.assertEqual(base.PASSWORD_HASHERS[0], "django.contrib.auth.hashers.Argon2PasswordHasher")
         self.assertTrue(settings.SIMPLE_JWT["BLACKLIST_AFTER_ROTATION"])
+
+
+class EmptyEnvValueTests(ApiTestCase):
+    def test_empty_jwt_signing_key_falls_back_to_secret_key(self):
+        import importlib
+        import os
+
+        from config.settings import base
+
+        old = os.environ.get("JWT_SIGNING_KEY")
+        os.environ["JWT_SIGNING_KEY"] = ""
+        try:
+            reloaded = importlib.reload(base)
+            self.assertEqual(reloaded.SIMPLE_JWT["SIGNING_KEY"], reloaded.SECRET_KEY)
+            self.assertIsNone(reloaded.JWT_COOKIE_DOMAIN or None)
+        finally:
+            if old is None:
+                os.environ.pop("JWT_SIGNING_KEY", None)
+            else:
+                os.environ["JWT_SIGNING_KEY"] = old
+            importlib.reload(base)

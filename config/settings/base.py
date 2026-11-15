@@ -131,7 +131,8 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
-    "SIGNING_KEY": env("JWT_SIGNING_KEY", default=SECRET_KEY),
+    # An empty JWT_SIGNING_KEY= in .env must not produce an empty key
+    "SIGNING_KEY": env("JWT_SIGNING_KEY", default="") or SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
@@ -144,7 +145,7 @@ JWT_COOKIE_ACCESS = "ws_access"
 JWT_COOKIE_REFRESH = "ws_refresh"
 JWT_COOKIE_SECURE = env.bool("JWT_COOKIE_SECURE", default=not DEBUG)
 JWT_COOKIE_SAMESITE = env("JWT_COOKIE_SAMESITE", default="Lax")
-JWT_COOKIE_DOMAIN = env("JWT_COOKIE_DOMAIN", default=None)
+JWT_COOKIE_DOMAIN = env("JWT_COOKIE_DOMAIN", default="") or None
 STORE_COOKIE = "ws_store"
 
 # --- i18n --------------------------------------------------------------------
