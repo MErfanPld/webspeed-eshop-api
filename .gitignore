@@ -67,3 +67,6 @@ coverage.xml
 
 # Docker
 *.pid
+
+# Redis dump
+dump.rdb
