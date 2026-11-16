@@ -106,42 +106,42 @@
        "id": "c1",
        "name": "تی‌شرت",
        "slug": "t-shirts",
-       "image": "/placeholders/cat-1.svg",
+       "image": "/banners/t-shirts.svg",
        "count": 48
       },
       {
        "id": "c2",
        "name": "هودی",
        "slug": "hoodies",
-       "image": "/placeholders/cat-2.svg",
+       "image": "/banners/hoodies.svg",
        "count": 32
       },
       {
        "id": "c3",
        "name": "شلوار",
        "slug": "pants",
-       "image": "/placeholders/cat-3.svg",
+       "image": "/banners/pants.svg",
        "count": 56
       },
       {
        "id": "c4",
        "name": "جین",
        "slug": "jeans",
-       "image": "/placeholders/cat-4.svg",
+       "image": "/banners/jeans.svg",
        "count": 28
       },
       {
        "id": "c5",
        "name": "کت",
        "slug": "jackets",
-       "image": "/placeholders/cat-1.svg",
+       "image": "/banners/jackets.svg",
        "count": 22
       },
       {
        "id": "c6",
        "name": "اکسسوری",
        "slug": "accessories",
-       "image": "/placeholders/cat-2.svg",
+       "image": "/banners/accessories.svg",
        "count": 40
       }
      ]
@@ -1115,7 +1115,7 @@
    "id": "t-shirts",
    "name": "تی‌شرت",
    "slug": "t-shirts",
-   "image": "/placeholders/cat-1.svg",
+   "image": "/banners/t-shirts.svg",
    "children": [
     {
      "name": "تی‌شرت ساده",
@@ -1135,7 +1135,7 @@
    "id": "shirts",
    "name": "پیراهن",
    "slug": "shirts",
-   "image": "/placeholders/cat-2.svg",
+   "image": "/banners/shirts.svg",
    "children": [
     {
      "name": "پیراهن رسمی",
@@ -1155,7 +1155,7 @@
    "id": "hoodies",
    "name": "هودی و سویشرت",
    "slug": "hoodies",
-   "image": "/placeholders/cat-3.svg",
+   "image": "/banners/hoodies.svg",
    "children": [
     {
      "name": "هودی",
@@ -1171,7 +1171,7 @@
    "id": "jackets",
    "name": "کت و پالتو",
    "slug": "jackets",
-   "image": "/placeholders/cat-4.svg",
+   "image": "/banners/jackets.svg",
    "children": [
     {
      "name": "کت جین",
@@ -1187,7 +1187,7 @@
    "id": "pants",
    "name": "شلوار",
    "slug": "pants",
-   "image": "/placeholders/cat-1.svg",
+   "image": "/banners/pants.svg",
    "children": [
     {
      "name": "شلوار پارچه‌ای",
@@ -1203,7 +1203,7 @@
    "id": "jeans",
    "name": "جین",
    "slug": "jeans",
-   "image": "/placeholders/cat-2.svg",
+   "image": "/banners/jeans.svg",
    "children": [
     {
      "name": "جین بگ",
@@ -1219,7 +1219,7 @@
    "id": "accessories",
    "name": "اکسسوری",
    "slug": "accessories",
-   "image": "/placeholders/cat-3.svg",
+   "image": "/banners/accessories.svg",
    "children": [
     {
      "name": "کیف",
