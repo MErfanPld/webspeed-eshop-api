@@ -5,9 +5,9 @@ Customer authentication with one-time codes (OTP) sent to the mobile number.
   max 5 wrong attempts, then a new code must be requested.
 - Rate limits: 3 codes per phone / 10 min, 10 per IP / 10 min.
 - Session: signed, httpOnly `ws_customer` cookie bound to the store (30 days).
-- SMS delivery: settings.SMS_BACKEND ("console" logs the code for
-  development; plug a provider into `send_sms`).
+- SMS delivery: apps.core.notify (console in development, Kavenegar in production).
 """
+
 import hashlib
 import hmac
 import logging
@@ -17,7 +17,7 @@ from django.conf import settings
 from django.core import signing
 from django.core.cache import cache
 
-from apps.core import ratelimit
+from apps.core import notify, ratelimit
 from apps.core.errors import ApiError, bad_request
 
 logger = logging.getLogger(__name__)
@@ -38,17 +38,20 @@ def _hash(code: str, phone: str) -> str:
 
 
 def send_sms(phone: str, message: str) -> None:
-    backend = settings.SMS_BACKEND
-    if backend == "console":
-        # Development only: the code is visible in the API log
-        logger.warning("SMS to %s: %s", phone, message)
-        return
-    raise ApiError("ارسال پیامک پیکربندی نشده است", 503)
+    try:
+        notify.send_sms(phone, message)
+    except notify.NotificationError:
+        logger.exception("OTP SMS failed")
+        raise ApiError("ارسال پیامک ناموفق بود؛ کمی بعد دوباره تلاش کنید", 503) from None
 
 
 def request_code(request, store, phone: str) -> str:
-    ratelimit.enforce(f"otp-phone:{store.id}:{phone}", 3, 600, "درخواست کد زیاد بود؛ {minutes} دقیقه دیگر دوباره تلاش کنید.")
-    ratelimit.enforce(f"otp-ip:{ratelimit.client_ip(request)}", 10, 600, "درخواست کد زیاد بود؛ {minutes} دقیقه دیگر دوباره تلاش کنید.")
+    ratelimit.enforce(
+        f"otp-phone:{store.id}:{phone}", 3, 600, "درخواست کد زیاد بود؛ {minutes} دقیقه دیگر دوباره تلاش کنید."
+    )
+    ratelimit.enforce(
+        f"otp-ip:{ratelimit.client_ip(request)}", 10, 600, "درخواست کد زیاد بود؛ {minutes} دقیقه دیگر دوباره تلاش کنید."
+    )
     code = f"{secrets.randbelow(10**6):06d}"
     cache.set(_key(store.id, phone), {"h": _hash(code, phone), "a": 0}, timeout=CODE_TTL)
     send_sms(phone, f"کد ورود به {store.name}: {code}")
@@ -98,4 +101,6 @@ def set_session_cookie(response, token: str):
 
 
 def clear_session_cookie(response):
-    response.delete_cookie(SESSION_COOKIE, path="/", domain=settings.JWT_COOKIE_DOMAIN, samesite=settings.JWT_COOKIE_SAMESITE)
+    response.delete_cookie(
+        SESSION_COOKIE, path="/", domain=settings.JWT_COOKIE_DOMAIN, samesite=settings.JWT_COOKIE_SAMESITE
+    )

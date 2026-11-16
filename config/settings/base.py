@@ -2,6 +2,7 @@
 Django base settings for WebSpeed E-Shop API.
 All environment-specific values come from environment variables (see .env.example).
 """
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -46,6 +47,7 @@ LOCAL_APPS = [
     "apps.media",
     "apps.customers",
     "apps.orders",
+    "apps.marketing",
     "apps.stats",
 ]
 
@@ -269,6 +271,9 @@ ADMIN_EMAIL = env("ADMIN_EMAIL", default="admin@webspeed.local")
 ADMIN_PASSWORD = env("ADMIN_PASSWORD", default="")
 # Customer OTP: "console" logs codes (development). Add a provider in apps/customers/otp.py
 SMS_BACKEND = env("SMS_BACKEND", default="console")
+# Kavenegar (https://kavenegar.com) when SMS_BACKEND=kavenegar
+KAVENEGAR_API_KEY = env("KAVENEGAR_API_KEY", default="")
+KAVENEGAR_SENDER = env("KAVENEGAR_SENDER", default="")
 # Return the OTP in the API response (development/E2E only — never in production)
 OTP_DEV_RETURN_CODE = env.bool("OTP_DEV_RETURN_CODE", default=False)
 MAX_UPLOAD_BYTES = 5 * 1024 * 1024
@@ -282,3 +287,36 @@ LOGGING = {
     "root": {"handlers": ["console"], "level": env("LOG_LEVEL", default="INFO")},
 }
 APPEND_SLASH = False
+
+# --- Frontend ------------------------------------------------------------------
+# Public URL of the storefront/admin app (payment callbacks, password-reset links)
+FRONTEND_URL = (env("FRONTEND_URL", default="") or "http://localhost:3000").rstrip("/")
+# Public URL of this API as seen by browsers (mock payment page, callbacks)
+API_PUBLIC_URL = (env("API_PUBLIC_URL", default="") or "http://localhost:8000").rstrip("/")
+
+# --- Email -------------------------------------------------------------------
+# Development: printed to the console. Production: smtp (EMAIL_HOST etc.)
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="WebSpeed <no-reply@webspeed.local>")
+PASSWORD_RESET_TIMEOUT = 60 * 60  # seconds
+
+# --- Payments ----------------------------------------------------------------
+# "mock" (local test gateway, prints to the console) or "zarinpal"
+PAYMENT_PROVIDER = env("PAYMENT_PROVIDER", default="mock")
+ZARINPAL_MERCHANT_ID = env("ZARINPAL_MERCHANT_ID", default="")
+ZARINPAL_SANDBOX = env.bool("ZARINPAL_SANDBOX", default=True)
+
+# --- Background jobs (Celery + Redis) -------------------------------------------
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="") or env("REDIS_URL", default="redis://redis:6379/0")
+CELERY_RESULT_BACKEND = None
+# Run tasks inline when no worker is running (development/tests). Docker Compose
+# starts a worker and sets this to False.
+CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER", default=True)
+CELERY_TASK_EAGER_PROPAGATES = False
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_DEFAULT_RETRY_DELAY = 30

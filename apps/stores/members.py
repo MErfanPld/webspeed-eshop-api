@@ -3,6 +3,7 @@ Team management for the current store.
 List: any member. Add / change role / remove: owner only.
 A store always keeps at least one owner.
 """
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -11,6 +12,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.response import Response
 
 from apps.core.errors import bad_request, conflict, forbidden, not_found
+from apps.core.models import audit
 from apps.core.views import AdminView, body
 
 from .models import StoreMember
@@ -77,6 +79,7 @@ class MemberListView(AdminView):
         if StoreMember.objects.filter(store=a.store, user=user).exists():
             raise conflict("این کاربر قبلاً عضو فروشگاه است")
         m = StoreMember.objects.create(store=a.store, user=user, role=role)
+        audit(a, "member.add", m.user.email)
         return Response({"member": _serialize(m, a.user)}, status=201)
 
 
@@ -100,6 +103,7 @@ class MemberDetailView(AdminView):
             raise bad_request("فروشگاه باید حداقل یک مالک داشته باشد")
         m.role = role
         m.save(update_fields=["role"])
+        audit(a, "member.role", m.user.email, role=m.role)
         return Response({"member": _serialize(m, a.user)})
 
     @extend_schema(summary="Remove a member (owner)", responses={200: dict})
@@ -110,5 +114,6 @@ class MemberDetailView(AdminView):
         m = self._get(request, user_id)
         if m.role == "owner" and _owner_count(a.store) <= 1:
             raise bad_request("فروشگاه باید حداقل یک مالک داشته باشد")
+        audit(a, "member.remove", m.user.email)
         m.delete()
         return Response({"ok": True})

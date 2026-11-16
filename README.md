@@ -149,6 +149,28 @@ frontend sources (`src/builder/registry/block-definitions.ts`, `src/config/home-
 | POST | `/customer/otp/verify` | — (5 attempts per code) | `{phone, code}` → `{customer, isNew}` + httpOnly `ws_customer` cookie |
 | GET / PATCH | `/customer/me` | customer | `{customer, orders}` · `{name?, email?}` |
 | POST | `/customer/logout` | — | `{ok}` |
+| GET / POST | `/customer/addresses` | customer | `{addresses}` · address → `{address}` (max 10, one default) |
+| PUT / DELETE | `/customer/addresses/<id>` | customer | `{address}` · `{ok}` |
+| POST | `/auth/password/forgot` | — (rate limited) | `{email}` → `{ok}` always; email with a 1-hour link |
+| POST | `/auth/password/reset` | — | `{uid, token, password}` → `{ok}`; revokes sessions |
+| GET | `/admin/audit?page&action` | owner | `{logs, pagination}` |
+| GET / POST | `/admin/coupons` | editor / admin | `{coupons}` · `{code, kind: percent\|fixed, value, maxDiscount?, minOrder?, usageLimit?, perCustomerLimit?, startsAt?, endsAt?, active?}` |
+| PUT / DELETE | `/admin/coupons/<id>` | admin | `{coupon}` · `{ok}` |
+| POST | `/coupons/validate` | — | `{code, subtotal, phone?}` → `{coupon: {code, discount}}` |
+| GET / POST | `/admin/brands` | editor / admin | `{brands}` · `{name, slug, logo?}` |
+| PUT / DELETE | `/admin/brands/<id>` | admin | `{brand}` · `{ok}` |
+| GET | `/brands` | — | brands with active products |
+| POST | `/products/<slug>/reviews` | customer who bought it | `{rating, text}` → `{review, status: "pending"}` |
+| GET / PATCH / DELETE | `/admin/reviews[/<id>]?status` | editor | moderation `{status: approved\|rejected}`; rating recomputed |
+| GET / POST / DELETE | `/admin/saved-blocks[/<id>]?kind=block\|template` | editor | reusable blocks and page templates (validated) |
+| GET | `/payments/callback?Authority&Status` | gateway | verifies once → 302 to `FRONTEND_URL/checkout/result` |
+| GET | `/payments/mock/<authority>` | — (mock only) | fake bank page for development |
+
+Checkout `data` also accepts `paymentMethod: "card" | "online"` (online needs no
+receipt and returns `order.paymentUrl`) and `coupon`. Admin lists
+(`/admin/orders`, `/admin/products`, `/admin/customers`, `/admin/media`,
+`/admin/reviews`) return everything as before, or a page plus `pagination`
+when `?page=` is given.
 
 Shapes (`ManagedPage`, `Product`, `Order`, …) are identical to the frontend
 TypeScript types (camelCase); the full schema is in Swagger.
@@ -160,9 +182,39 @@ TypeScript types (camelCase); the full schema is in Swagger.
 - **URLs:** `javascript:`, `data:`, `vbscript:`, `//host` … removed from all URL fields (`href`, `image`, `src`, …) in pages, products, categories and settings.
 - **Orders:** server-side prices and shipping (`flatRate`, `freeOver`), variant validation, stock reserved with row locks in one transaction, cancellation restores stock and reopening reserves it again, tracking requires the buyer's phone, customers created/updated per store by phone.
 - **Files:** type detected from magic bytes (PNG/JPEG/GIF/WEBP; SVG rejected), 5 MB limit; media in the public bucket, receipts in the private bucket served only through short-lived signed URLs.
-- **Rate limits (Redis):** login (failed attempts only), checkout, tracking, OTP requests, password change.
+- **Rate limits (Redis):** login (failed attempts only), checkout, tracking, OTP requests, password change/reset, coupon checks, reviews.
+- **Coupons:** validated and applied on the server inside the checkout transaction with a row lock (usage limits can't be exceeded); cancelling an order returns the use.
+- **Payments:** a callback is verified once (idempotent); a failed payment cancels the order and restores stock.
+- **Reviews:** only customers who bought the product, one per product, moderated before they appear.
+- **Audit log:** coupon, brand, product deletion, order status, review moderation and team changes.
 - **Theme:** `settings.theme = {colors: {primary, primaryHover, accent, accentHover, background, surface, foreground, muted, mutedForeground, border, error: "#rrggbb"}, typography: {baseSize 12–22, lineHeight 1.2–2.2}}`, validated server-side.
 - **Customers:** OTP codes are 6 digits, stored only as HMAC hashes in Redis for 2 minutes; sessions are signed, store-bound, httpOnly cookies (30 days). Orders placed with the same phone appear in the customer's profile.
+
+## Paid services in development
+
+Nothing paid is required to run the project; everything prints to the terminal:
+
+| Service | Development (default) | Production |
+|---|---|---|
+| SMS (OTP, order status) | `SMS_BACKEND=console` → `[SMS → 0912…] …` | `kavenegar` + `KAVENEGAR_API_KEY` |
+| Email (password reset) | console email backend | SMTP (`EMAIL_*`) |
+| Payment | `PAYMENT_PROVIDER=mock` → local fake bank page, `[PAYMENT] …` logs | `zarinpal` + `ZARINPAL_MERCHANT_ID` |
+| Background jobs | `CELERY_TASK_ALWAYS_EAGER=True` (inline) | `worker` service (`celery -A config worker`) |
+
+## Backups
+
+```bash
+docker compose exec db pg_dump -U webspeed -Fc webspeed > backup-$(date +%F).dump
+docker compose exec -T db pg_restore -U webspeed -d webspeed --clean < backup-YYYY-MM-DD.dump
+```
+
+Back up the MinIO volume (`minio_data`) or mirror the buckets with `mc mirror`.
+
+## CI
+
+The frontend repository's E2E job checks out this repository; it needs a
+repository secret `API_REPO_TOKEN` (fine-grained token with read access to
+`webspeed-eshop-api`).
 
 ## Frontend integration
 

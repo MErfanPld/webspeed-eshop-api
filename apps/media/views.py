@@ -13,11 +13,19 @@ class MediaListView(AdminView):
 
     @extend_schema(summary="Media library of the current store", responses={200: dict})
     def get(self, request):
-        return Response({"items": [s.serialize(m) for m in MediaFile.objects.filter(store=request.admin.store)]})
+        from apps.core.pagination import paginate_optional
+
+        items, meta = paginate_optional(MediaFile.objects.filter(store=request.admin.store), request, 5000, 40)
+        out = {"items": [s.serialize(m) for m in items]}
+        if meta:
+            out["pagination"] = meta
+        return Response(out)
 
     @extend_schema(
         summary="Upload image (multipart `file`; PNG/JPG/WEBP/GIF ≤ 5MB, checked by magic bytes)",
-        request={"multipart/form-data": {"type": "object", "properties": {"file": {"type": "string", "format": "binary"}}}},
+        request={
+            "multipart/form-data": {"type": "object", "properties": {"file": {"type": "string", "format": "binary"}}}
+        },
         responses={201: dict, 400: dict, 413: dict},
     )
     def post(self, request):

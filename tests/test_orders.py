@@ -14,7 +14,13 @@ class OrderTests(ApiTestCase):
         self.store.settings = {**self.store.settings, "shipping": {"flatRate": 50000, "freeOver": 1_000_000}}
         self.store.save()
         self.p = Product.objects.create(
-            store=self.store, key="tp", slug="tp", status="active", name="محصول", price=200000, stock=3,
+            store=self.store,
+            key="tp",
+            slug="tp",
+            status="active",
+            name="محصول",
+            price=200000,
+            stock=3,
             variants={"sizes": ["M"], "colors": [{"name": "مشکی", "hex": "#000000"}]},
         )
 
@@ -61,7 +67,9 @@ class OrderTests(ApiTestCase):
         self.assertEqual(self.stock(), 3)
         self.client.patch(f"/api/v1/admin/orders/{o.id}", {"status": "confirmed"}, format="json")
         self.assertEqual(self.stock(), 1)
-        self.assertEqual(self.client.patch(f"/api/v1/admin/orders/{o.id}", {"status": "lost"}, format="json").status_code, 400)
+        self.assertEqual(
+            self.client.patch(f"/api/v1/admin/orders/{o.id}", {"status": "lost"}, format="json").status_code, 400
+        )
 
     def test_tracking_requires_matching_phone(self):
         number = self.checkout([self.line()]).json()["order"]["number"]

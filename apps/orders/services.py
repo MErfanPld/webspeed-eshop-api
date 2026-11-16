@@ -6,6 +6,7 @@ Order rules (ported from frontend src/server/services/orders.ts).
   re-opening a cancelled order reserves it again.
 - Receipts live in private storage and are only reachable via signed URLs.
 """
+
 import re
 import secrets
 from datetime import timedelta
@@ -87,6 +88,11 @@ def serialize(o: Order, admin: bool = True) -> dict:
         "shipping": o.shipping,
         "total": o.total,
         "hasReceipt": bool(o.receipt),
+        "discount": o.discount,
+        "couponCode": o.coupon_code or None,
+        "paymentMethod": o.payment_method,
+        "paid": bool(o.paid_at),
+        "paidAt": _iso(o.paid_at),
         "note": o.note or None,
         "createdAt": _iso(o.created_at),
         "updatedAt": _iso(o.updated_at),
@@ -148,19 +154,25 @@ def _restore(store: Store, lines: list[tuple[str, int]]):
             p.save(update_fields=["stock", "updated_at"])
 
 
-def create_order(store: Store, customer_raw, items_raw, receipt_file) -> Order:
+def create_order(
+    store: Store, customer_raw, items_raw, receipt_file, payment_method: str = "card", coupon_code: str = ""
+) -> Order:
     customer = validate_customer(customer_raw)
     requested = _merge_items(items_raw)
+    if payment_method not in Order.PaymentMethod.values:
+        raise bad_request("روش پرداخت نامعتبر است")
 
-    # Card-to-card payments need a receipt image (validated before any DB work)
-    if receipt_file is None:
-        raise bad_request("تصویر رسید پرداخت را آپلود کنید")
-    try:
-        receipt_bytes, _mime, ext = read_upload(receipt_file, "رسید")
-    except ApiError as e:
-        if e.status_code == 400:
-            raise bad_request("رسید باید تصویر PNG، JPG، WEBP یا GIF باشد") from None
-        raise
+    receipt_bytes = ext = None
+    if payment_method == Order.PaymentMethod.CARD:
+        # Card-to-card payments need a receipt image (validated before any DB work)
+        if receipt_file is None:
+            raise bad_request("تصویر رسید پرداخت را آپلود کنید")
+        try:
+            receipt_bytes, _mime, ext = read_upload(receipt_file, "رسید")
+        except ApiError as e:
+            if e.status_code == 400:
+                raise bad_request("رسید باید تصویر PNG، JPG، WEBP یا GIF باشد") from None
+            raise
 
     settings_ = store.settings or {}
     shipping_conf = settings_.get("shipping") or {}
@@ -202,10 +214,18 @@ def create_order(store: Store, customer_raw, items_raw, receipt_file) -> Order:
         free_over = int(shipping_conf.get("freeOver") or 0)
         shipping = 0 if free_over > 0 and subtotal >= free_over else flat
 
+        discount, coupon = 0, None
+        if coupon_code:
+            from apps.marketing.services import redeem
+
+            coupon, discount = redeem(store, coupon_code, subtotal, customer["phone"])
+
         _reserve(store, [(i["productId"], i["quantity"]) for i in items])
 
         cust, _ = Customer.objects.get_or_create(
-            store=store, phone=customer["phone"], defaults={"name": customer["fullName"], "email": customer.get("email", "")}
+            store=store,
+            phone=customer["phone"],
+            defaults={"name": customer["fullName"], "email": customer.get("email", "")},
         )
         if cust.name != customer["fullName"] or (customer.get("email") and cust.email != customer["email"]):
             cust.name = customer["fullName"]
@@ -219,20 +239,41 @@ def create_order(store: Store, customer_raw, items_raw, receipt_file) -> Order:
             items=items,
             subtotal=subtotal,
             shipping=shipping,
-            total=subtotal + shipping,
+            total=subtotal - discount + shipping,
+            discount=discount,
+            coupon_code=coupon.code if coupon else "",
+            payment_method=payment_method,
         )
         for _ in range(5):
             order.number = _new_number()
             if not Order.objects.filter(store=store, number=order.number).exists():
                 break
-        order.receipt.save(f"receipt.{ext}", ContentFile(receipt_bytes), save=False)
+        if receipt_bytes is not None:
+            order.receipt.save(f"receipt.{ext}", ContentFile(receipt_bytes), save=False)
         try:
             with transaction.atomic():
                 order.save()
         except IntegrityError:
-            order.receipt.delete(save=False)
+            if order.receipt:
+                order.receipt.delete(save=False)
             raise
+        if coupon:
+            from apps.marketing.models import CouponRedemption
+
+            CouponRedemption.objects.create(coupon=coupon, order=order, phone=customer["phone"], amount=discount)
+        transaction.on_commit(lambda: _notify(order))
     return order
+
+
+def _notify(order: Order):
+    from .tasks import notify_order_status
+
+    try:
+        notify_order_status.delay(str(order.id))
+    except Exception:  # broker down must never fail the request
+        import logging
+
+        logging.getLogger(__name__).exception("could not queue order notification")
 
 
 def get_order(store: Store, order_id) -> Order:
@@ -242,10 +283,12 @@ def get_order(store: Store, order_id) -> Order:
     return o
 
 
-def list_orders(store: Store, status: str | None = None, q: str | None = None):
+def list_orders(store: Store, status: str | None = None, q: str | None = None, payment: str | None = None):
     qs = Order.objects.filter(store=store)
     if status in STATUSES:
         qs = qs.filter(status=status)
+    if payment in Order.PaymentMethod.values:
+        qs = qs.filter(payment_method=payment)
     if q:
         q = q.strip()[:60]
         qs = qs.filter(
@@ -262,14 +305,20 @@ def update_status(store: Store, order_id, status, note=None) -> Order:
     if not order:
         raise not_found("سفارش یافت نشد")
     lines = [(i["productId"], int(i["quantity"])) for i in order.items]
+    previous = order.status
     if order.status != Order.Status.CANCELLED and status == Order.Status.CANCELLED:
         _restore(store, lines)
+        from apps.marketing.services import release
+
+        release(order)
     elif order.status == Order.Status.CANCELLED and status != Order.Status.CANCELLED:
         _reserve(store, lines)
     order.status = status
     if isinstance(note, str):
         order.note = note[:1000]
     order.save()
+    if previous != status:
+        transaction.on_commit(lambda: _notify(order))
     return order
 
 

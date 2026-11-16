@@ -44,3 +44,22 @@ class Page(models.Model):
 
     def __str__(self):
         return f"{self.store_id}:{self.key}"
+
+
+class SavedBlock(models.Model):  # noqa: DJ008
+    """Reusable block group ("block") or full page template ("template")."""
+
+    class Kind(models.TextChoices):
+        BLOCK = "block"
+        TEMPLATE = "template"
+
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name="saved_blocks")
+    kind = models.CharField(max_length=10, choices=Kind.choices)
+    name = models.CharField(max_length=120)
+    description = models.CharField(max_length=300, blank=True)
+    blocks = models.JSONField(default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["store", "kind"])]

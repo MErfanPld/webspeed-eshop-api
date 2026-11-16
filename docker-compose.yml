@@ -91,6 +91,29 @@ services:
       minio-init:
         condition: service_completed_successfully
 
+  worker:
+    build:
+      context: .
+      args:
+        REQUIREMENTS: development
+    restart: unless-stopped
+    command: ["celery", "-A", "config", "worker", "-l", "info", "--concurrency", "2"]
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      DATABASE_URL: postgres://${POSTGRES_USER:-webspeed}:${POSTGRES_PASSWORD:-webspeed}@db:5432/${POSTGRES_DB:-webspeed}
+      REDIS_URL: redis://redis:6379/0
+      STORAGE_BACKEND: s3
+      S3_ENDPOINT_URL: http://minio:9000
+      CELERY_TASK_ALWAYS_EAGER: "False"
+      SKIP_MIGRATE: "1"
+    depends_on:
+      web:
+        condition: service_started
+
 volumes:
   postgres_data:
   minio_data:

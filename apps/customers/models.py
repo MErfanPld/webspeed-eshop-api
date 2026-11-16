@@ -19,3 +19,19 @@ class Customer(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.phone})"
+
+
+class Address(models.Model):  # noqa: DJ008
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="addresses")
+    title = models.CharField(max_length=60, blank=True)
+    full_name = models.CharField(max_length=120)
+    phone = models.CharField(max_length=11)
+    province = models.CharField(max_length=60)
+    city = models.CharField(max_length=60)
+    address = models.CharField(max_length=500)
+    postal_code = models.CharField(max_length=10)
+    is_default = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-is_default", "-created_at"]

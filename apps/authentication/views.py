@@ -4,6 +4,7 @@ Auth: login / refresh / logout / me.
 Tokens are returned in the JSON body (for Bearer clients) AND set as
 httpOnly cookies (for the browser frontend, `credentials: "include"`).
 """
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password, make_password
@@ -67,7 +68,9 @@ def token_payload(refresh: RefreshToken) -> dict:
     return {"access": str(refresh.access_token), "refresh": str(refresh)}
 
 
-LoginRequest = inline_serializer("LoginRequest", {"email": serializers.EmailField(), "password": serializers.CharField()})
+LoginRequest = inline_serializer(
+    "LoginRequest", {"email": serializers.EmailField(), "password": serializers.CharField()}
+)
 TokenRequest = inline_serializer("RefreshRequest", {"refresh": serializers.CharField(required=False)})
 
 
@@ -78,7 +81,11 @@ class LoginView(APIView):
     @extend_schema(
         summary="Login (email + password)",
         request=LoginRequest,
-        responses={200: OpenApiResponse(description="{user, access, refresh} + httpOnly cookies"), 401: dict, 429: dict},
+        responses={
+            200: OpenApiResponse(description="{user, access, refresh} + httpOnly cookies"),
+            401: dict,
+            429: dict,
+        },
     )
     def post(self, request):
         data = body(request)
@@ -201,3 +208,114 @@ class PasswordChangeView(AdminView):
         response = Response({"ok": True, **token_payload(refresh)})
         set_auth_cookies(response, refresh)
         return response
+
+
+# --- Forgot / reset password (email) -------------------------------------------
+class PasswordForgotView(APIView):
+    """Always answers 200 (no account enumeration); the email holds a 1-hour link."""
+
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    @extend_schema(summary="Request a password reset email {email}", request=dict, responses={200: dict, 429: dict})
+    def post(self, request):
+        from django.contrib.auth.tokens import default_token_generator
+        from django.utils.encoding import force_bytes
+        from django.utils.http import urlsafe_base64_encode
+
+        from apps.core import notify
+
+        enforce_origin(request)
+        email = body(request).get("email") or ""
+        email = email.strip().lower()[:254] if isinstance(email, str) else ""
+        ratelimit.enforce(
+            f"pwforgot-ip:{ratelimit.client_ip(request)}",
+            5,
+            15 * 60,
+            "درخواست زیاد بود؛ {minutes} دقیقه دیگر امتحان کنید.",
+        )
+        if email:
+            ratelimit.enforce(f"pwforgot:{email}", 3, 60 * 60, "درخواست زیاد بود؛ {minutes} دقیقه دیگر امتحان کنید.")
+            user = User.objects.filter(email__iexact=email, is_active=True).first()
+            if user:
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = default_token_generator.make_token(user)
+                link = f"{settings.FRONTEND_URL}/admin/reset-password?uid={uid}&token={token}"
+                try:
+                    notify.send_email(
+                        user.email,
+                        "بازیابی رمز عبور WebSpeed",
+                        f"برای تعیین رمز جدید روی لینک زیر بزنید (اعتبار: ۱ ساعت):\n\n{link}\n\n"
+                        "اگر این درخواست را شما نداده‌اید، این ایمیل را نادیده بگیرید.",
+                    )
+                except Exception:
+                    import logging
+
+                    logging.getLogger(__name__).exception("password reset email failed")
+        return Response({"ok": True})
+
+
+class PasswordResetView(APIView):
+    authentication_classes = []
+    permission_classes = [AllowAny]
+
+    @extend_schema(summary="Set a new password {uid, token, password}", request=dict, responses={200: dict, 400: dict})
+    def post(self, request):
+        from django.contrib.auth.tokens import default_token_generator
+        from django.utils.encoding import force_str
+        from django.utils.http import urlsafe_base64_decode
+
+        enforce_origin(request)
+        ratelimit.enforce(
+            f"pwreset-ip:{ratelimit.client_ip(request)}",
+            10,
+            15 * 60,
+            "تلاش زیاد بود؛ {minutes} دقیقه دیگر امتحان کنید.",
+        )
+        d = body(request)
+        uid, token, new = (d.get(k) if isinstance(d.get(k), str) else "" for k in ("uid", "token", "password"))
+        try:
+            user = User.objects.filter(pk=force_str(urlsafe_base64_decode(uid)), is_active=True).first()
+        except (ValueError, TypeError, OverflowError):
+            user = None
+        if not user or not default_token_generator.check_token(user, token):
+            raise ApiError("لینک بازیابی نامعتبر یا منقضی شده است.", 400)
+        try:
+            validate_password(new, user)
+        except ValidationError as e:
+            raise ApiError("رمز عبور جدید ضعیف است", 400, {"password": e.messages}) from None
+        user.set_password(new)
+        user.save(update_fields=["password"])
+        for t in OutstandingToken.objects.filter(user=user):
+            BlacklistedToken.objects.get_or_create(token=t)
+        return Response({"ok": True})
+
+
+class AuditLogView(AdminView):
+    min_role = "owner"
+
+    @extend_schema(summary="Audit log of the current store (owner only, paginated)", responses={200: dict})
+    def get(self, request):
+        from apps.core.models import AuditLog
+        from apps.core.pagination import paginate
+
+        qs = AuditLog.objects.select_related("user").filter(store=request.admin.store)
+        if request.query_params.get("action"):
+            qs = qs.filter(action__startswith=request.query_params["action"][:60])
+        items, meta = paginate(qs, request, default_size=50)
+        return Response(
+            {
+                "logs": [
+                    {
+                        "id": e.id,
+                        "action": e.action,
+                        "target": e.target,
+                        "meta": e.meta,
+                        "user": e.user.email if e.user else None,
+                        "createdAt": e.created_at.isoformat().replace("+00:00", "Z"),
+                    }
+                    for e in items
+                ],
+                "pagination": meta,
+            }
+        )

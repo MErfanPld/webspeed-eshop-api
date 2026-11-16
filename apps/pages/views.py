@@ -5,6 +5,7 @@ Mirrors the Next.js API used by the builder's HttpPageRepository:
   POST            /admin/pages/<id>/{publish,unpublish,duplicate}
   GET             /pages?id=… | ?slug=…   (public, published only)
 """
+
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.response import Response
 
@@ -83,3 +84,60 @@ class PublicPageView(PublicView):
         if not page:
             raise not_found("صفحه یافت نشد")
         return Response({"page": s.public_serialize(page)})
+
+
+# --- Saved blocks & templates ---------------------------------------------------
+def _saved(b) -> dict:
+    return {
+        "id": b.id,
+        "kind": b.kind,
+        "name": b.name,
+        "description": b.description,
+        "blocks": b.blocks,
+        "createdAt": b.created_at.isoformat().replace("+00:00", "Z"),
+    }
+
+
+class SavedBlockListView(AdminView):
+    @extend_schema(summary="Saved blocks / page templates (?kind=block|template)", responses={200: dict})
+    def get(self, request):
+        from .models import SavedBlock
+
+        qs = SavedBlock.objects.filter(store=request.admin.store)
+        if request.query_params.get("kind") in SavedBlock.Kind.values:
+            qs = qs.filter(kind=request.query_params["kind"])
+        return Response({"items": [_saved(b) for b in qs[:200]]})
+
+    @extend_schema(summary="Save blocks {kind, name, description?, blocks[]}", request=dict, responses={201: dict})
+    def post(self, request):
+        from apps.core.blocks import validate_blocks
+
+        from .models import SavedBlock
+
+        d = body(request)
+        name = d.get("name").strip()[:120] if isinstance(d.get("name"), str) else ""
+        if not name:
+            raise bad_request("نام را وارد کنید")
+        kind = d.get("kind") if d.get("kind") in SavedBlock.Kind.values else "block"
+        try:
+            blocks = validate_blocks(d.get("blocks"))
+        except ValueError as e:
+            raise bad_request(str(e)) from None
+        if not blocks:
+            raise bad_request("حداقل یک بلوک انتخاب کنید")
+        if SavedBlock.objects.filter(store=request.admin.store).count() >= 200:
+            raise bad_request("تعداد موارد ذخیره‌شده به سقف رسیده است")
+        desc = d.get("description").strip()[:300] if isinstance(d.get("description"), str) else ""
+        b = SavedBlock.objects.create(store=request.admin.store, kind=kind, name=name, description=desc, blocks=blocks)
+        return Response({"item": _saved(b)}, status=201)
+
+
+class SavedBlockDetailView(AdminView):
+    @extend_schema(summary="Delete a saved block / template", responses={200: dict})
+    def delete(self, request, item_id):
+        from .models import SavedBlock
+
+        deleted, _ = SavedBlock.objects.filter(store=request.admin.store, id=item_id).delete()
+        if not deleted:
+            raise not_found("مورد یافت نشد")
+        return Response({"ok": True})

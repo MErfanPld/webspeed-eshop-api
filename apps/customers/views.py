@@ -11,7 +11,7 @@ from apps.orders.services import serialize as serialize_order
 from apps.stores.tenancy import resolve_public_store
 
 from . import otp
-from .models import Customer
+from .models import Address, Customer
 
 
 class CustomerListView(AdminView):
@@ -26,8 +26,16 @@ class CustomerListView(AdminView):
             )
             .order_by("-last_order")
         )
+        q = request.query_params.get("q")
+        if q:
+            qs = qs.filter(Q(name__icontains=q[:60]) | Q(phone__icontains=q[:20]))
+        from apps.core.pagination import paginate_optional
+
+        items, meta = paginate_optional(qs, request, 5000)
+        out = {"pagination": meta} if meta else {}
         return Response(
             {
+                **out,
                 "customers": [
                     {
                         "phone": c.phone,
@@ -38,8 +46,8 @@ class CustomerListView(AdminView):
                         "firstOrder": c.created_at.isoformat().replace("+00:00", "Z"),
                         "lastOrder": c.last_order.isoformat().replace("+00:00", "Z") if c.last_order else None,
                     }
-                    for c in qs
-                ]
+                    for c in items
+                ],
             }
         )
 
@@ -68,20 +76,28 @@ def current_customer(request) -> Customer:
 
 
 class OtpRequestView(PublicView):
-    @extend_schema(summary="Send a login code to a mobile number {phone}", request=dict, responses={200: dict, 429: dict})
+    @extend_schema(
+        summary="Send a login code to a mobile number {phone}", request=dict, responses={200: dict, 429: dict}
+    )
     def post(self, request):
         enforce_origin(request)
         store = resolve_public_store(request)
         phone = _phone(body(request))
         code = otp.request_code(request, store, phone)
-        payload = {"ok": True, "expiresIn": otp.CODE_TTL, "isNew": not Customer.objects.filter(store=store, phone=phone).exists()}
+        payload = {
+            "ok": True,
+            "expiresIn": otp.CODE_TTL,
+            "isNew": not Customer.objects.filter(store=store, phone=phone).exists(),
+        }
         if settings.OTP_DEV_RETURN_CODE:
             payload["devCode"] = code  # development/testing only
         return Response(payload)
 
 
 class OtpVerifyView(PublicView):
-    @extend_schema(summary="Verify the code {phone, code} → customer session cookie", request=dict, responses={200: dict})
+    @extend_schema(
+        summary="Verify the code {phone, code} → customer session cookie", request=dict, responses={200: dict}
+    )
     def post(self, request):
         enforce_origin(request)
         store = resolve_public_store(request)
@@ -130,3 +146,94 @@ class CustomerLogoutView(PublicView):
         response = Response({"ok": True})
         otp.clear_session_cookie(response)
         return response
+
+
+# --- Addresses -------------------------------------------------------------------
+def _address(a: Address) -> dict:
+    return {
+        "id": a.id,
+        "title": a.title,
+        "fullName": a.full_name,
+        "phone": a.phone,
+        "province": a.province,
+        "city": a.city,
+        "address": a.address,
+        "postalCode": a.postal_code,
+        "isDefault": a.is_default,
+    }
+
+
+def _address_values(d) -> dict:
+    from apps.orders.services import validate_customer
+
+    c = validate_customer(d)
+    title = d.get("title").strip()[:60] if isinstance(d.get("title"), str) else ""
+    return {
+        "title": title,
+        "full_name": c["fullName"],
+        "phone": c["phone"],
+        "province": c["province"],
+        "city": c["city"],
+        "address": c["address"],
+        "postal_code": c["postalCode"],
+    }
+
+
+def _set_default(customer, a: Address):
+    Address.objects.filter(customer=customer).exclude(pk=a.pk).update(is_default=False)
+    if not a.is_default:
+        a.is_default = True
+        a.save(update_fields=["is_default"])
+
+
+class AddressListView(PublicView):
+    @extend_schema(summary="Saved addresses of the signed-in customer", responses={200: dict, 401: dict})
+    def get(self, request):
+        c = current_customer(request)
+        return Response({"addresses": [_address(a) for a in c.addresses.all()]})
+
+    @extend_schema(summary="Add address", request=dict, responses={201: dict})
+    def post(self, request):
+        enforce_origin(request)
+        c = current_customer(request)
+        if c.addresses.count() >= 10:
+            raise bad_request("حداکثر ۱۰ آدرس می‌توانید ذخیره کنید")
+        d = body(request)
+        a = Address.objects.create(customer=c, **_address_values(d))
+        if d.get("isDefault") or c.addresses.count() == 1:
+            _set_default(c, a)
+        return Response({"address": _address(a)}, status=201)
+
+
+class AddressDetailView(PublicView):
+    def _get(self, request, address_id):
+        c = current_customer(request)
+        a = c.addresses.filter(id=address_id).first()
+        if not a:
+            from apps.core.errors import not_found
+
+            raise not_found("آدرس یافت نشد")
+        return c, a
+
+    @extend_schema(summary="Update address", request=dict, responses={200: dict})
+    def put(self, request, address_id):
+        enforce_origin(request)
+        c, a = self._get(request, address_id)
+        d = body(request)
+        for k, v in _address_values(d).items():
+            setattr(a, k, v)
+        a.save()
+        if d.get("isDefault"):
+            _set_default(c, a)
+        return Response({"address": _address(a)})
+
+    @extend_schema(summary="Delete address", responses={200: dict})
+    def delete(self, request, address_id):
+        enforce_origin(request)
+        c, a = self._get(request, address_id)
+        was_default = a.is_default
+        a.delete()
+        nxt = c.addresses.first()
+        if was_default and nxt:
+            _set_default(c, nxt)
+        return Response({"ok": True})

@@ -11,9 +11,12 @@ from rest_framework.response import Response
 from apps.core import ratelimit
 from apps.core.authentication import enforce_origin
 from apps.core.errors import ApiError, bad_request, not_found
+from apps.core.models import audit
+from apps.core.pagination import paginate_optional
 from apps.core.views import AdminView, PublicView, body
 from apps.stores.tenancy import resolve_public_store
 
+from . import payments
 from . import services as s
 from .models import Order
 
@@ -50,8 +53,12 @@ class CheckoutView(PublicView):
     @extend_schema(
         summary="Checkout (multipart: data=JSON{customer, items[{productId,size,color,quantity}]}, receipt=image)",
         description="Prices, shipping and stock are computed server-side; client prices are ignored.",
-        request={"multipart/form-data": {"type": "object", "properties": {
-            "data": {"type": "string"}, "receipt": {"type": "string", "format": "binary"}}}},
+        request={
+            "multipart/form-data": {
+                "type": "object",
+                "properties": {"data": {"type": "string"}, "receipt": {"type": "string", "format": "binary"}},
+            }
+        },
         responses={201: dict, 400: dict, 409: dict, 429: dict},
     )
     def post(self, request):
@@ -66,8 +73,20 @@ class CheckoutView(PublicView):
         if not isinstance(data, dict):
             raise bad_request("درخواست نامعتبر است")
         store = resolve_public_store(request)
-        order = s.create_order(store, data.get("customer"), data.get("items"), request.FILES.get("receipt"))
-        return Response({"order": {"number": order.number, "total": order.total, "status": order.status}}, status=201)
+        method = data.get("paymentMethod") or "card"
+        order = s.create_order(
+            store,
+            data.get("customer"),
+            data.get("items"),
+            request.FILES.get("receipt"),
+            payment_method=method,
+            coupon_code=data.get("coupon") if isinstance(data.get("coupon"), str) else "",
+        )
+        out = {"number": order.number, "total": order.total, "discount": order.discount, "status": order.status}
+        if order.payment_method == Order.PaymentMethod.ONLINE:
+            _payment, url = payments.start(order)
+            out["paymentUrl"] = url
+        return Response({"order": out}, status=201)
 
 
 class TrackView(PublicView):
@@ -94,9 +113,7 @@ class TrackView(PublicView):
                     "total": o.total,
                     "shipping": o.shipping,
                     "createdAt": s._iso(o.created_at),
-                    "items": [
-                        {k: i[k] for k in ("name", "quantity", "size", "color", "lineTotal")} for i in o.items
-                    ],
+                    "items": [{k: i[k] for k in ("name", "quantity", "size", "color", "lineTotal")} for i in o.items],
                 }
             }
         )
@@ -104,13 +121,19 @@ class TrackView(PublicView):
 
 class AdminOrderListView(AdminView):
     @extend_schema(
-        summary="Orders of the current store", operation_id="admin_orders_list",
-        parameters=[OpenApiParameter("status", str), OpenApiParameter("q", str)],
+        summary="Orders of the current store",
+        operation_id="admin_orders_list",
+        parameters=[OpenApiParameter(n, str) for n in ("status", "q", "payment", "page", "pageSize")],
         responses={200: dict},
     )
     def get(self, request):
-        qs = s.list_orders(request.admin.store, request.query_params.get("status"), request.query_params.get("q"))
-        return Response({"orders": [s.serialize(o) for o in qs[:500]]})
+        qp = request.query_params
+        qs = s.list_orders(request.admin.store, qp.get("status"), qp.get("q"), qp.get("payment"))
+        items, meta = paginate_optional(qs, request, 500)
+        out = {"orders": [s.serialize(o) for o in items]}
+        if meta:
+            out["pagination"] = meta
+        return Response(out)
 
 
 class AdminOrderDetailView(AdminView):
@@ -124,7 +147,9 @@ class AdminOrderDetailView(AdminView):
     @extend_schema(summary="Change status {status, note?} (admin+)", request=dict, responses={200: dict})
     def patch(self, request, order_id):
         d = body(request)
-        return Response({"order": s.serialize(s.update_status(request.admin.store, order_id, d.get("status"), d.get("note")))})
+        order = s.update_status(request.admin.store, order_id, d.get("status"), d.get("note"))
+        audit(request.admin, "order.status", order.number, status=order.status)
+        return Response({"order": s.serialize(order)})
 
 
 class AdminOrderReceiptView(AdminView):
@@ -159,3 +184,54 @@ class SignedReceiptFileView(PublicView):
         response["X-Content-Type-Options"] = "nosniff"
         response["Content-Security-Policy"] = "default-src 'none'; sandbox"
         return response
+
+
+class PaymentCallbackView(PublicView):
+    """Gateway → API redirect. Verifies once, then sends the buyer to the frontend."""
+
+    @extend_schema(
+        summary="Payment gateway callback (Authority, Status=OK|NOK) → redirect to the frontend result page",
+        parameters=[OpenApiParameter("Authority", str), OpenApiParameter("Status", str)],
+        responses={302: None},
+    )
+    def get(self, request):
+        from django.http import HttpResponseRedirect
+
+        qp = request.query_params
+        authority = qp.get("Authority") or qp.get("authority") or ""
+        order, ok = payments.verify(authority[:100], qp.get("Status") or qp.get("status") or "")
+        if not order:
+            return HttpResponseRedirect(f"{settings.FRONTEND_URL}/checkout/result?status=failed")
+        return HttpResponseRedirect(payments.result_url(order, ok))
+
+
+class MockGatewayView(PublicView):
+    """Development-only fake bank page (PAYMENT_PROVIDER=mock)."""
+
+    @extend_schema(exclude=True)
+    def get(self, request, authority):
+        from django.http import HttpResponse
+        from django.utils.html import escape
+
+        from .models import Payment
+
+        if settings.PAYMENT_PROVIDER != "mock":
+            raise not_found("یافت نشد")
+        p = Payment.objects.select_related("order").filter(authority=authority).first()
+        if not p:
+            raise not_found("تراکنش یافت نشد")
+        cb = payments.callback_url()
+        a = escape(authority)
+        html = f"""<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>درگاه پرداخت آزمایشی</title>
+<style>body{{font-family:Tahoma,sans-serif;background:#f1f5f9;display:grid;place-items:center;min-height:100vh;margin:0}}
+.c{{background:#fff;padding:32px;border-radius:16px;box-shadow:0 10px 30px #0001;max-width:360px;width:90%;text-align:center}}
+a{{display:block;padding:12px;border-radius:10px;margin-top:12px;text-decoration:none;color:#fff;font-weight:bold}}
+.ok{{background:#16a34a}}.no{{background:#dc2626}}small{{color:#64748b}}</style></head><body><div class="c">
+<h2>درگاه پرداخت آزمایشی</h2><small>بدون پرداخت واقعی — فقط برای تست</small>
+<p>سفارش <b>{escape(p.order.number)}</b></p><p>مبلغ: <b>{p.amount:,} تومان</b></p>
+<a class="ok" id="pay-ok" href="{cb}?Authority={a}&Status=OK">پرداخت موفق</a>
+<a class="no" id="pay-fail" href="{cb}?Authority={a}&Status=NOK">انصراف / پرداخت ناموفق</a>
+</div></body></html>"""
+        payments._log(f"mock gateway opened for {p.order.number}")
+        return HttpResponse(html)

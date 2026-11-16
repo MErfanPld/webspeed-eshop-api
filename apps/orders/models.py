@@ -37,7 +37,16 @@ class Order(models.Model):
     subtotal = models.BigIntegerField()
     shipping = models.BigIntegerField(default=0)
     total = models.BigIntegerField()
+
     # Card-to-card payment receipt: private storage, served via signed URLs
+    class PaymentMethod(models.TextChoices):
+        CARD = "card"
+        ONLINE = "online"
+
+    payment_method = models.CharField(max_length=10, choices=PaymentMethod.choices, default=PaymentMethod.CARD)
+    paid_at = models.DateTimeField(null=True, blank=True)
+    discount = models.BigIntegerField(default=0)
+    coupon_code = models.CharField(max_length=40, blank=True)
     receipt = models.FileField(upload_to=receipt_path, storage=private_storage, max_length=255, blank=True)
     note = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -56,3 +65,26 @@ class Order(models.Model):
 
     def __str__(self):
         return self.number
+
+
+class Payment(models.Model):  # noqa: DJ008
+    """Online payment attempt for an order (gateway: mock / zarinpal)."""
+
+    class Status(models.TextChoices):
+        PENDING = "pending"
+        PAID = "paid"
+        FAILED = "failed"
+
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name="payments")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="payments")
+    provider = models.CharField(max_length=20)
+    authority = models.CharField(max_length=100, unique=True)
+    amount = models.BigIntegerField()
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    ref_id = models.CharField(max_length=100, blank=True)
+    raw = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]

@@ -15,3 +15,14 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.production
       DEBUG: "False"
+
+  worker:
+    build:
+      args:
+        REQUIREMENTS: production
+    command: ["celery", "-A", "config", "worker", "-l", "info", "--concurrency", "2"]
+    volumes: !reset []
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.production
+      DEBUG: "False"
+      CELERY_TASK_ALWAYS_EAGER: "False"

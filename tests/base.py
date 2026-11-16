@@ -47,7 +47,7 @@ class ApiTestCase(TestCase):
         self.login(email=email, client=c)
         return c
 
-    def checkout(self, items, customer=None, receipt=PNG, client=None, store_host=None):
+    def checkout(self, items, customer=None, receipt=PNG, client=None, store_host=None, **payload):
         from django.core.files.uploadedfile import SimpleUploadedFile
 
         c = client or APIClient()
@@ -64,6 +64,7 @@ class ApiTestCase(TestCase):
                         "postalCode": "1234567890",
                     },
                     "items": items,
+                    **payload,
                 }
             )
         }
