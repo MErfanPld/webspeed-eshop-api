@@ -100,3 +100,12 @@ class EmptyEnvValueTests(ApiTestCase):
             else:
                 os.environ["JWT_SIGNING_KEY"] = old
             importlib.reload(base)
+
+
+class DjangoAdminTests(ApiTestCase):
+    def test_admin_changelist_renders(self):
+        # regression: Django 5.1 template Context broke on Python 3.14
+        self.owner.is_staff = self.owner.is_superuser = True
+        self.owner.save()
+        self.client.force_login(self.owner)
+        self.assertEqual(self.client.get("/django-admin/users/user/").status_code, 200)
