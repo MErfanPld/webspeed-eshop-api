@@ -48,6 +48,7 @@ LOCAL_APPS = [
     "apps.customers",
     "apps.orders",
     "apps.marketing",
+    "apps.platform",
     "apps.stats",
 ]
 
@@ -264,6 +265,7 @@ CORS_ALLOW_HEADERS = [
     "x-store-host",
 ]
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=CORS_ALLOWED_ORIGINS)
+# Every subdomain of PLATFORM_DOMAIN is a trusted origin (set below the platform block)
 
 # --- WebSpeed ----------------------------------------------------------------
 DEFAULT_STORE_SLUG = env("DEFAULT_STORE_SLUG", default="")
@@ -320,3 +322,26 @@ CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER", default=True)
 CELERY_TASK_EAGER_PROPAGATES = False
 CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_DEFAULT_RETRY_DELAY = 30
+
+# --- Platform (multi-tenant on subdomains) -----------------------------------
+# PLATFORM_DOMAIN=webspeed.ir:
+#   webspeed.ir / www.webspeed.ir   → landing page, plans, sign-up (no store)
+#   panel.webspeed.ir               → central admin panel (all of a user's stores)
+#   <slug>.webspeed.ir              → that store's storefront + its own /admin
+#   custom domains (Store.domain)   → still supported
+# Empty (development): any host shows DEFAULT_STORE_SLUG / the first store.
+PLATFORM_DOMAIN = (env("PLATFORM_DOMAIN", default="") or "").strip().lower().strip(".")
+PANEL_SUBDOMAIN = env("PANEL_SUBDOMAIN", default="panel")
+# Subdomains that can never be a store
+RESERVED_SUBDOMAINS = {
+    "www", "panel", "admin", "api", "app", "mail", "smtp", "ftp", "static", "media", "cdn",
+    "assets", "files", "blog", "help", "support", "docs", "status", "dashboard", "webspeed",
+    "test", "dev", "staging", "ns1", "ns2",
+}
+TRIAL_DAYS = env.int("TRIAL_DAYS", default=14)
+
+if PLATFORM_DOMAIN:
+    import re as _re
+
+    _pd = _re.escape(PLATFORM_DOMAIN)
+    CORS_ALLOWED_ORIGIN_REGEXES = [rf"^https?://([a-z0-9-]+\.)?{_pd}(:\d+)?$"]

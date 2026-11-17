@@ -114,6 +114,10 @@ def create_store(owner, name, slug, domain=None) -> Store:
         raise bad_request("نام فروشگاه الزامی است")
     if not STORE_SLUG_RE.match(slug):
         raise bad_request("شناسه فروشگاه فقط حروف انگلیسی کوچک، عدد و - (۲ تا ۴۰ کاراکتر)")
+    from django.conf import settings
+
+    if slug in settings.RESERVED_SUBDOMAINS:
+        raise bad_request("این شناسه رزرو شده است؛ نام دیگری انتخاب کنید")
     domain = _clean_domain(domain)
     if Store.objects.filter(slug=slug).exists():
         raise conflict("این شناسه قبلاً استفاده شده")

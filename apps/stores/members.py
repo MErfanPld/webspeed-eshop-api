@@ -57,6 +57,9 @@ class MemberListView(AdminView):
     def post(self, request):
         a = request.admin
         _require_owner(a)
+        from apps.platform.services import enforce_member_limit
+
+        enforce_member_limit(a.store)
         d = body(request)
         email = d.get("email").strip().lower() if isinstance(d.get("email"), str) else ""
         role = d.get("role")

@@ -30,7 +30,10 @@ _DUMMY_HASH = make_password("timing-equalizer-not-a-real-password")
 
 
 def user_dict(u) -> dict:
-    return {"id": str(u.id), "email": u.email, "name": u.get_full_name()}
+    out = {"id": str(u.id), "email": u.email, "name": u.get_full_name()}
+    if u.is_superuser:
+        out["isPlatformAdmin"] = True
+    return out
 
 
 def _cookie_kwargs():
@@ -105,6 +108,12 @@ class LoginView(APIView):
         # Always hash once so unknown emails take about as long as wrong passwords
         valid = user.check_password(password) if user else check_password(password, _DUMMY_HASH) and False
         if not user or not valid:
+            raise ApiError("ایمیل یا رمز عبور اشتباه است.", 401)
+        # On a store's own host only that store's team can sign in
+        from apps.stores.tenancy import request_host, store_for_host
+
+        host_store = store_for_host(request_host(request))
+        if host_store is not None and not user.memberships.filter(store=host_store).exists():
             raise ApiError("ایمیل یا رمز عبور اشتباه است.", 401)
         # Only failed attempts count towards the limit
         ratelimit.reset(limit_key)

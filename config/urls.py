@@ -27,6 +27,7 @@ from apps.marketing import views as marketing
 from apps.media import views as media
 from apps.orders import views as orders
 from apps.pages import views as pages
+from apps.platform import views as platform
 from apps.stats.views import DashboardView
 from apps.stores import members
 from apps.stores import views as stores
@@ -95,6 +96,13 @@ api = [
     # Payments
     path("payments/callback", orders.PaymentCallbackView.as_view(), name="payment-callback"),
     path("payments/mock/<str:authority>", orders.MockGatewayView.as_view(), name="payment-mock"),
+    # Platform: landing page plans, sign-up, subscriptions, platform admin
+    path("platform/plans", platform.PlanListView.as_view(), name="platform-plans"),
+    path("platform/check-subdomain", platform.SubdomainCheckView.as_view(), name="platform-check-subdomain"),
+    path("platform/signup", platform.SignupView.as_view(), name="platform-signup"),
+    path("platform/stores", platform.PlatformStoresView.as_view(), name="platform-stores"),
+    path("platform/stores/<uuid:store_id>", platform.PlatformStoreDetailView.as_view(), name="platform-store"),
+    path("admin/subscription", platform.StoreSubscriptionView.as_view(), name="admin-subscription"),
     # Stats
     path("admin/stats", DashboardView.as_view(), name="admin-stats"),
 ]

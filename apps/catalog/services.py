@@ -180,6 +180,9 @@ def save_product(store: Store, data: dict, key: str | None = None) -> Product:
         if not product:
             raise not_found("محصول یافت نشد")
     else:
+        from apps.platform.services import enforce_product_limit
+
+        enforce_product_limit(store)
         product = Product(store=store, key=f"p-{int(time.time() * 1000):x}-{secrets.token_hex(2)}")
     clash = Product.objects.filter(store=store, slug=values["slug"]).exclude(pk=product.pk)
     if clash.exists():

@@ -29,7 +29,12 @@ def origin_allowed(request) -> bool:
     candidate = f"{parsed.scheme}://{parsed.netloc}"
     if parsed.netloc == request.get_host():
         return True
-    return candidate in set(settings.CSRF_TRUSTED_ORIGINS) | set(settings.CORS_ALLOWED_ORIGINS)
+    if candidate in set(settings.CSRF_TRUSTED_ORIGINS) | set(settings.CORS_ALLOWED_ORIGINS):
+        return True
+    # The platform domain and all of its store subdomains
+    import re
+
+    return any(re.match(p, candidate) for p in getattr(settings, "CORS_ALLOWED_ORIGIN_REGEXES", []))
 
 
 def enforce_origin(request):
