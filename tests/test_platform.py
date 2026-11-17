@@ -14,7 +14,7 @@ PD = "webspeed.test"
 ORIGIN_A = f"https://alpha.{PD}"
 
 
-@override_settings(PLATFORM_DOMAIN=PD, DEFAULT_STORE_SLUG="", CORS_ALLOWED_ORIGIN_REGEXES=[rf"^https?://([a-z0-9-]+\.)?webspeed\.test$"])
+@override_settings(PLATFORM_DOMAIN=PD, DEFAULT_STORE_SLUG="", CORS_ALLOWED_ORIGIN_REGEXES=[r"^https?://([a-z0-9-]+\.)?webspeed\.test$"])
 class SubdomainIsolationTests(ApiTestCase):
     def setUp(self):
         super().setUp()
@@ -107,7 +107,7 @@ class SubdomainIsolationTests(ApiTestCase):
         self.assertEqual(r.status_code, 200)  # the owner can still sign in and renew
 
 
-@override_settings(PLATFORM_DOMAIN=PD, CORS_ALLOWED_ORIGIN_REGEXES=[rf"^https?://([a-z0-9-]+\.)?webspeed\.test$"])
+@override_settings(PLATFORM_DOMAIN=PD, CORS_ALLOWED_ORIGIN_REGEXES=[r"^https?://([a-z0-9-]+\.)?webspeed\.test$"])
 class SignupTests(ApiTestCase):
     def signup(self, **kw):
         data = {
