@@ -29,6 +29,13 @@ def store_urls(store: Store) -> dict:
     host = store.domain or (f"{store.slug}.{pd}" if pd else None)
     if not host:
         return {"url": None, "adminUrl": None}
+    if settings.DEBUG:
+        # development: shops run on the frontend's port (e.g. shop.ws.localhost:3000)
+        from urllib.parse import urlparse
+
+        port = urlparse(settings.FRONTEND_URL).port
+        if port:
+            host = f"{host}:{port}"
     return {"url": f"{scheme}://{host}", "adminUrl": f"{scheme}://{host}/admin"}
 
 

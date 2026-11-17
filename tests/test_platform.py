@@ -40,6 +40,23 @@ class SubdomainIsolationTests(ApiTestCase):
         for host in (f"nope.{PD}", f"panel.{PD}", f"www.{PD}", PD, "evil.example.com", f"a.b.{PD}"):
             self.assertEqual(self.get("/api/v1/store", host).status_code, 404, host)
 
+    def test_platform_subdomains_never_fall_back_even_with_default_store(self):
+        with self.settings(DEFAULT_STORE_SLUG="alpha"):
+            for host in (f"nope.{PD}", f"panel.{PD}", PD):
+                self.assertEqual(self.get("/api/v1/store", host).status_code, 404, host)
+            # a foreign host (e.g. the server IP) may use the explicit default
+            self.assertEqual(self.get("/api/v1/store", "10.0.0.5").json()["store"]["name"], "آلفا")
+
+    def test_payment_returns_to_the_shops_own_address(self):
+        from apps.orders.models import Order
+        from apps.orders.payments import result_url
+
+        o = Order(store=self.b, number="WS-1", customer_info={}, items=[], subtotal=0, total=0)
+        with self.settings(DEBUG=False):
+            self.assertTrue(result_url(o, True).startswith(f"https://beta.{PD}/checkout/result?"))
+            self.b.domain = "shop-beta.com"
+            self.assertTrue(result_url(o, True).startswith("https://shop-beta.com/checkout/result?"))
+
     def test_custom_domain_still_works(self):
         self.b.domain = "shop-beta.com"
         self.b.save()

@@ -249,7 +249,13 @@ class PasswordForgotView(APIView):
             if user:
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = default_token_generator.make_token(user)
-                link = f"{settings.FRONTEND_URL}/admin/reset-password?uid={uid}&token={token}"
+                # Multi-tenant: the central panel serves every user's stores
+                base = (
+                    f"https://{settings.PANEL_SUBDOMAIN}.{settings.PLATFORM_DOMAIN}"
+                    if settings.PLATFORM_DOMAIN and not settings.DEBUG
+                    else settings.FRONTEND_URL
+                )
+                link = f"{base}/admin/reset-password?uid={uid}&token={token}"
                 try:
                     notify.send_email(
                         user.email,

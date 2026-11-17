@@ -34,6 +34,13 @@ def _log(msg: str):
     logger.info(msg)
 
 
+def store_base_url(store) -> str:
+    """The shop's own address (subdomain / custom domain), else FRONTEND_URL."""
+    from apps.platform.services import store_urls
+
+    return store_urls(store)["url"] or settings.FRONTEND_URL
+
+
 def callback_url() -> str:
     return f"{settings.API_PUBLIC_URL}/api/v1/payments/callback"
 
@@ -41,7 +48,7 @@ def callback_url() -> str:
 def result_url(order: Order, ok: bool) -> str:
     from urllib.parse import urlencode
 
-    return f"{settings.FRONTEND_URL}/checkout/result?" + urlencode(
+    return f"{store_base_url(order.store)}/checkout/result?" + urlencode(
         {"order": order.number, "status": "ok" if ok else "failed"}
     )
 

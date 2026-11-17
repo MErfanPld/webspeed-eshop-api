@@ -190,6 +190,27 @@ TypeScript types (camelCase); the full schema is in Swagger.
 - **Theme:** `settings.theme = {colors: {primary, primaryHover, accent, accentHover, background, surface, foreground, muted, mutedForeground, border, error: "#rrggbb"}, typography: {baseSize 12–22, lineHeight 1.2–2.2}}`, validated server-side.
 - **Customers:** OTP codes are 6 digits, stored only as HMAC hashes in Redis for 2 minutes; sessions are signed, store-bound, httpOnly cookies (30 days). Orders placed with the same phone appear in the customer's profile.
 
+## Multi-tenant platform (stores on subdomains)
+
+With `PLATFORM_DOMAIN=webspeed.ir`: the bare domain is the landing site
+(plans + sign-up), `panel.webspeed.ir` the central panel, and every store
+lives on `<slug>.webspeed.ir` (or its custom domain) with its own `/admin`
+locked to that store. Unknown or reserved subdomains are a 404 and never fall
+back to another store. Server setup (DNS, wildcard TLS, Nginx, Docker):
+**[deploy/DEPLOY.md](deploy/DEPLOY.md)**.
+
+| Method | Path | Auth | |
+|---|---|---|---|
+| GET | `/platform/plans` | — | plans for the landing page |
+| GET | `/platform/check-subdomain?name=` | — | `{available, reason}` |
+| POST | `/platform/signup` | — (5/hour per IP) | `{storeName, subdomain, name, email, password, plan}` → store + owner + trial |
+| GET | `/admin/subscription` | member | current plan, status, days left, all plans |
+| GET / PATCH | `/platform/stores[/<id>]` | superuser | all stores · `{plan?, status?, paidUntil?}` |
+
+Plan limits (products, team members) are enforced by the API; a store whose
+trial/subscription ended is closed to visitors (403 `{reason: "inactive"}`)
+while its panel keeps working.
+
 ## Paid services in development
 
 Nothing paid is required to run the project; everything prints to the terminal:

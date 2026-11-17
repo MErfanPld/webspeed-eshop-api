@@ -107,8 +107,12 @@ def resolve_public_store(request) -> Store:
     store = store_for_host(host)
     if store:
         return ensure_active(store)
+    # Hosts under the platform domain (landing, panel, unknown/reserved subdomains)
+    # never fall back to another store, whatever the fallback settings say
+    if host_kind(host)[0] != "other":
+        raise not_found("فروشگاه یافت نشد")
     if settings.PLATFORM_DOMAIN and not settings.DEFAULT_STORE_SLUG:
-        # Production: an unknown host must never show another store
+        # Production: an unknown foreign host must never show another store either
         raise not_found("فروشگاه یافت نشد")
     if settings.DEFAULT_STORE_SLUG:
         store = Store.objects.filter(slug=settings.DEFAULT_STORE_SLUG).first()

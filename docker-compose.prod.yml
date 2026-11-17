@@ -1,10 +1,11 @@
 # Production overrides:
 #   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
-# Put a TLS-terminating reverse proxy in front of `web` (and of MinIO, or use
-# managed S3). Do not expose db/redis ports.
+# Full server (API + frontend, both repositories side by side): see deploy/DEPLOY.md.
+# Only 127.0.0.1 ports are published; Nginx on the host terminates TLS.
 services:
   minio:
-    ports: !reset []
+    ports: !override
+      - "127.0.0.1:9000:9000"   # public media via Nginx (media.<domain>)
 
   web:
     build:
@@ -12,6 +13,8 @@ services:
         REQUIREMENTS: production
     command: ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "60", "--access-logfile", "-"]
     volumes: !reset []
+    ports: !override
+      - "127.0.0.1:8000:8000"   # only the frontend (and the host) reach the API
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.production
       DEBUG: "False"
@@ -26,3 +29,22 @@ services:
       DJANGO_SETTINGS_MODULE: config.settings.production
       DEBUG: "False"
       CELERY_TASK_ALWAYS_EAGER: "False"
+
+  # Next.js storefront + panels + landing site (repository ../webspeed-eshop)
+  frontend:
+    build:
+      context: ../webspeed-eshop
+      args:
+        API_INTERNAL_URL: http://web:8000/api/v1
+        MEDIA_PUBLIC_URLS: ${S3_PUBLIC_URL}
+    restart: unless-stopped
+    environment:
+      API_INTERNAL_URL: http://web:8000/api/v1
+      PLATFORM_DOMAIN: ${PLATFORM_DOMAIN}
+      PANEL_SUBDOMAIN: ${PANEL_SUBDOMAIN:-panel}
+      TRIAL_DAYS: ${TRIAL_DAYS:-14}
+      SITE_URL: https://${PLATFORM_DOMAIN}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - web

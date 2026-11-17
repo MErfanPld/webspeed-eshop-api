@@ -201,7 +201,7 @@ class PaymentCallbackView(PublicView):
         authority = qp.get("Authority") or qp.get("authority") or ""
         order, ok = payments.verify(authority[:100], qp.get("Status") or qp.get("status") or "")
         if not order:
-            return HttpResponseRedirect(f"{settings.FRONTEND_URL}/checkout/result?status=failed")
+            return HttpResponseRedirect(f"{settings.FRONTEND_URL}/checkout/result?status=failed")  # unknown payment
         return HttpResponseRedirect(payments.result_url(order, ok))
 
 
