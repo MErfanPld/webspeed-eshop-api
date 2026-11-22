@@ -154,3 +154,91 @@ def enforce_member_limit(store: Store) -> None:
             f"سقف اعضای تیم پلن «{plan.name}» ({plan.max_members}) پر شده؛ پلن را ارتقا دهید", 403,
             {"reason": "plan_limit"},
         )
+
+
+# --- Landing site content ------------------------------------------------------
+LANDING_CACHE_KEY = "platform:landing:v1"
+
+
+def _file_url(f) -> str:
+    try:
+        return f.url if f else ""
+    except Exception:
+        return ""
+
+
+def serialize_article(a, full: bool = False) -> dict:
+    out = {
+        "slug": a.slug,
+        "title": a.title,
+        "excerpt": a.excerpt,
+        "category": a.category,
+        "author": a.author,
+        "cover": _file_url(a.cover),
+        "publishedAt": _iso(a.published_at),
+        "readMinutes": a.read_minutes,
+    }
+    if full:
+        out["body"] = a.body
+        out["updatedAt"] = _iso(a.updated_at)
+    return out
+
+
+def platform_stats() -> dict:
+    """Real numbers from the database (never invented)."""
+    from apps.catalog.models import Product
+    from apps.orders.models import Order
+
+    return {
+        "stores": Store.objects.count(),
+        "products": Product.objects.filter(status="active").count(),
+        "orders": Order.objects.exclude(status="cancelled").count(),
+    }
+
+
+def landing_payload() -> dict:
+    from django.core.cache import cache
+
+    from .models import Article, FaqItem, LandingFeature, LandingSettings, RoadmapStep, Testimonial
+
+    cached = cache.get(LANDING_CACHE_KEY)
+    if cached:
+        return cached
+    st = LandingSettings.load()
+    data = {
+        "settings": {
+            "heroBadge": st.hero_badge,
+            "heroTitle": st.hero_title,
+            "heroHighlight": st.hero_highlight,
+            "heroTitleEnd": st.hero_title_end,
+            "heroSubtitle": st.hero_subtitle,
+            "ctaPrimary": st.cta_primary,
+            "ctaSecondary": st.cta_secondary,
+            "videoTitle": st.video_title,
+            "videoText": st.video_text,
+            "videoUrl": st.video_url,
+            "videoFile": _file_url(st.video_file),
+            "videoPoster": _file_url(st.video_poster),
+            "supportPhone": st.support_phone,
+            "supportEmail": st.support_email,
+            "supportHours": st.support_hours,
+            "instagram": st.instagram,
+            "telegram": st.telegram,
+            "enamadHtml": st.enamad_html,
+        },
+        "stats": platform_stats() if st.show_stats else None,
+        "features": [{"icon": f.icon, "title": f.title, "text": f.text} for f in LandingFeature.objects.filter(active=True)],
+        "roadmap": [
+            {"icon": r.icon, "when": r.when, "title": r.title, "text": r.text} for r in RoadmapStep.objects.filter(active=True)
+        ],
+        "faq": [{"q": f.question, "a": f.answer} for f in FaqItem.objects.filter(active=True)],
+        "testimonials": [
+            {"name": t.name, "role": t.role, "text": t.text, "rating": t.rating, "avatar": _file_url(t.avatar), "storeUrl": t.store_url}
+            for t in Testimonial.objects.filter(active=True)
+        ],
+        "articles": [serialize_article(a) for a in Article.objects.filter(status="published")[:3]],
+        "plans": [serialize_plan(p) for p in Plan.objects.filter(active=True)],
+        "trialDays": settings.TRIAL_DAYS,
+    }
+    cache.set(LANDING_CACHE_KEY, data, 60)
+    return data

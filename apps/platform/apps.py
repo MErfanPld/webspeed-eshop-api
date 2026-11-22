@@ -6,3 +6,6 @@ class PlatformConfig(AppConfig):
     name = "apps.platform"
     label = "platform"
     verbose_name = "Platform (plans & subscriptions)"
+
+    def ready(self):
+        from . import signals  # noqa: F401

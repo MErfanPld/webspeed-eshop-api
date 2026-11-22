@@ -98,6 +98,9 @@ api = [
     path("payments/mock/<str:authority>", orders.MockGatewayView.as_view(), name="payment-mock"),
     # Platform: landing page plans, sign-up, subscriptions, platform admin
     path("platform/plans", platform.PlanListView.as_view(), name="platform-plans"),
+    path("platform/landing", platform.LandingView.as_view(), name="platform-landing"),
+    path("platform/articles", platform.ArticleListView.as_view(), name="platform-articles"),
+    path("platform/articles/<str:slug>", platform.ArticleDetailView.as_view(), name="platform-article"),
     path("platform/check-subdomain", platform.SubdomainCheckView.as_view(), name="platform-check-subdomain"),
     path("platform/signup", platform.SignupView.as_view(), name="platform-signup"),
     path("platform/stores", platform.PlatformStoresView.as_view(), name="platform-stores"),

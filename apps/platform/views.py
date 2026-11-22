@@ -146,3 +146,36 @@ class PlatformStoreDetailView(PlatformAdminView):
             .get(id=st.id)
         )
         return Response({"store": _store_row(st)})
+
+
+class LandingView(PublicView):
+    @extend_schema(summary="Everything the landing site shows (content managed in /django-admin)", responses={200: dict})
+    def get(self, request):
+        return Response(s.landing_payload())
+
+
+class ArticleListView(PublicView):
+    @extend_schema(summary="Published articles (?page, ?category)", parameters=[OpenApiParameter("page", str), OpenApiParameter("category", str)], responses={200: dict})
+    def get(self, request):
+        from apps.core.pagination import paginate
+
+        from .models import Article
+
+        qs = Article.objects.filter(status="published")
+        if request.query_params.get("category"):
+            qs = qs.filter(category=request.query_params["category"][:60])
+        items, meta = paginate(qs, request, default_size=12)
+        categories = sorted(set(Article.objects.filter(status="published").values_list("category", flat=True)) - {""})
+        return Response({"articles": [s.serialize_article(a) for a in items], "pagination": meta, "categories": categories})
+
+
+class ArticleDetailView(PublicView):
+    @extend_schema(summary="A published article", responses={200: dict, 404: dict})
+    def get(self, request, slug):
+        from .models import Article
+
+        a = Article.objects.filter(status="published", slug=slug).first()
+        if not a:
+            raise not_found("مقاله یافت نشد")
+        related = Article.objects.filter(status="published").exclude(pk=a.pk)[:3]
+        return Response({"article": s.serialize_article(a, full=True), "related": [s.serialize_article(r) for r in related]})
