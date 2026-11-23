@@ -237,3 +237,89 @@ class AddressDetailView(PublicView):
         if was_default and nxt:
             _set_default(c, nxt)
         return Response({"ok": True})
+
+
+# --- Contact form ---------------------------------------------------------------------
+def _message(m) -> dict:
+    return {
+        "id": m.id,
+        "name": m.name,
+        "email": m.email,
+        "phone": m.phone,
+        "message": m.message,
+        "read": m.read,
+        "createdAt": m.created_at.isoformat().replace("+00:00", "Z"),
+    }
+
+
+class ContactView(PublicView):
+    @extend_schema(summary="Send a message to the store {name, email?, phone?, message}", request=dict, responses={201: dict, 400: dict, 429: dict})
+    def post(self, request):
+        from apps.core import ratelimit
+
+        from .models import ContactMessage
+
+        enforce_origin(request)
+        store = resolve_public_store(request)
+        ratelimit.enforce(f"contact:{store.id}:{ratelimit.client_ip(request)}", 5, 3600, "پیام‌های زیادی فرستادید؛ کمی بعد دوباره تلاش کنید.")
+        d = body(request)
+
+        def text(k, n):
+            v = d.get(k)
+            return v.strip()[:n] if isinstance(v, str) else ""
+
+        name, email, phone, message = text("name", 120), text("email", 254), normalize_phone(text("phone", 20)), text("message", 4000)
+        errors = {}
+        if not name:
+            errors["name"] = "نام الزامی است"
+        if not email and not phone:
+            errors["email"] = "ایمیل یا شماره تماس را وارد کنید"
+        if email and ("@" not in email or "." not in email.split("@")[-1]):
+            errors["email"] = "ایمیل معتبر نیست"
+        if phone and not PHONE_RE.match(phone):
+            errors["phone"] = "شماره موبایل معتبر نیست"
+        if len(message) < 5:
+            errors["message"] = "پیام را بنویسید"
+        if errors:
+            raise bad_request("فرم را بررسی کنید", errors)
+        m = ContactMessage.objects.create(store=store, name=name, email=email, phone=phone, message=message)
+        return Response({"ok": True, "id": m.id}, status=201)
+
+
+class AdminMessageListView(AdminView):
+    @extend_schema(summary="Contact messages of the current store (?unread=1)", responses={200: dict})
+    def get(self, request):
+        from apps.core.pagination import paginate
+
+        from .models import ContactMessage
+
+        qs = ContactMessage.objects.filter(store=request.admin.store)
+        if request.query_params.get("unread") == "1":
+            qs = qs.filter(read=False)
+        items, meta = paginate(qs, request, default_size=30)
+        unread = ContactMessage.objects.filter(store=request.admin.store, read=False).count()
+        return Response({"messages": [_message(m) for m in items], "pagination": meta, "unread": unread})
+
+
+class AdminMessageDetailView(AdminView):
+    def _get(self, request, pk):
+        from apps.core.errors import not_found
+
+        from .models import ContactMessage
+
+        m = ContactMessage.objects.filter(store=request.admin.store, pk=pk).first()
+        if not m:
+            raise not_found("پیام یافت نشد")
+        return m
+
+    @extend_schema(summary="Mark read/unread {read}", request=dict, responses={200: dict})
+    def patch(self, request, pk):
+        m = self._get(request, pk)
+        m.read = bool(body(request).get("read", True))
+        m.save(update_fields=["read"])
+        return Response({"message": _message(m)})
+
+    @extend_schema(summary="Delete message", responses={200: dict})
+    def delete(self, request, pk):
+        self._get(request, pk).delete()
+        return Response({"ok": True})

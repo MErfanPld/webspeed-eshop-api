@@ -92,6 +92,9 @@ api = [
     path("customer/otp/verify", customers.OtpVerifyView.as_view(), name="customer-otp-verify"),
     path("customer/me", customers.CustomerMeView.as_view(), name="customer-me"),
     path("customer/logout", customers.CustomerLogoutView.as_view(), name="customer-logout"),
+    path("contact", customers.ContactView.as_view(), name="contact"),
+    path("admin/messages", customers.AdminMessageListView.as_view(), name="admin-messages"),
+    path("admin/messages/<int:pk>", customers.AdminMessageDetailView.as_view(), name="admin-message"),
     path("customer/addresses", customers.AddressListView.as_view(), name="customer-addresses"),
     path("customer/addresses/<int:address_id>", customers.AddressDetailView.as_view(), name="customer-address"),
     # Payments

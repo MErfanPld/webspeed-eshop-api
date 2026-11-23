@@ -35,3 +35,19 @@ class Address(models.Model):  # noqa: DJ008
 
     class Meta:
         ordering = ["-is_default", "-created_at"]
+
+
+class ContactMessage(models.Model):  # noqa: DJ008
+    """Message sent from the storefront «تماس با ما» page."""
+
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name="contact_messages")
+    name = models.CharField(max_length=120)
+    email = models.EmailField(blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    message = models.TextField()
+    read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["store", "read", "-created_at"])]
