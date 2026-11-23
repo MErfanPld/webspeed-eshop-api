@@ -30,7 +30,7 @@ pip install -r requirements/production.txt
 ## ۲. فایل `~/webspeed-eshop-api/.env`
 
 ```dotenv
-DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SETTINGS_MODULE=config.settings.pythonanywhere
 SECRET_KEY=<خروجی: python -c "import secrets; print(secrets.token_urlsafe(64))">
 DEBUG=False
 ALLOWED_HOSTS=webspeedapi.pythonanywhere.com
@@ -76,23 +76,17 @@ set -a && source .env && set +a && python manage.py createsuperuser
 ## ۴. تب Web
 - **Virtualenv:** `/home/webspeedapi/.virtualenvs/webspeed`
 - **Source code:** `/home/webspeedapi/webspeed-eshop-api`
-- **WSGI configuration file:** محتوا را با این جایگزین کنید:
+- **WSGI configuration file:** همه محتوا را با این جایگزین کنید. `.env` خودکار خوانده می‌شود و تنظیمات مخصوص PythonAnywhere (`config/settings/pythonanywhere.py`) پیش‌فرض‌های بدون Redis، فایل محلی و SQLite را دارد:
 
 ```python
 import os
 import sys
 
-path = "/home/webspeedapi/webspeed-eshop-api"
-if path not in sys.path:
-    sys.path.insert(0, path)
+PROJECT_PATH = "/home/webspeedapi/webspeed-eshop-api"
+if PROJECT_PATH not in sys.path:
+    sys.path.insert(0, PROJECT_PATH)
 
-# Load .env into the environment (django-environ reads os.environ)
-with open(os.path.join(path, ".env")) as f:
-    for line in f:
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, value = line.split("=", 1)
-            os.environ.setdefault(key, value)
+os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.pythonanywhere"
 
 from django.core.wsgi import get_wsgi_application  # noqa: E402
 
