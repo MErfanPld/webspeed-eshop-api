@@ -13,8 +13,8 @@ os.environ.setdefault("STORAGE_BACKEND", "local")  # files on disk, /media/ via 
 os.environ.setdefault("CELERY_TASK_ALWAYS_EAGER", "True")  # no worker: run tasks inline
 os.environ.setdefault("TRUST_PROXY_HEADERS", "True")  # PythonAnywhere (and Vercel) proxy requests
 
-from .production import *  # noqa: E402, F401, F403
 from .base import BASE_DIR, DATABASES, env  # noqa: E402
+from .production import *  # noqa: E402, F401, F403
 
 # SQLite next to the code unless DATABASE_URL says otherwise
 if not env("DATABASE_URL", default=""):

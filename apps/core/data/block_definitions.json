@@ -2623,6 +2623,38 @@
    "path": "_anchor",
    "group": "پیشرفته",
    "placeholder": "مثلاً offers"
+  },
+  {
+   "type": "select",
+   "label": "انیمیشن ورود",
+   "path": "_animation",
+   "group": "جلوه‌ها",
+   "options": [
+    {
+     "label": "خودکار (پیشنهادی)",
+     "value": "auto"
+    },
+    {
+     "label": "بدون انیمیشن",
+     "value": "none"
+    },
+    {
+     "label": "بالا آمدن",
+     "value": "fade-up"
+    },
+    {
+     "label": "ظاهر شدن",
+     "value": "fade"
+    },
+    {
+     "label": "بزرگ شدن",
+     "value": "zoom"
+    },
+    {
+     "label": "ورود از کنار",
+     "value": "slide"
+    }
+   ]
   }
  ]
 }

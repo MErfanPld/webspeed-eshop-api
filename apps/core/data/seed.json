@@ -320,11 +320,7 @@
    "compareAtPrice": 2490000,
    "category": "t-shirts",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-1.svg",
-    "/placeholders/product-2.svg",
-    "/placeholders/product-3.svg"
-   ],
+   "images": ["/placeholders/products/t-shirts-1.svg", "/placeholders/products/t-shirts-4.svg"],
    "sizes": [
     "S",
     "M",
@@ -363,10 +359,7 @@
    "compareAtPrice": 3990000,
    "category": "jeans",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-2.svg",
-    "/placeholders/product-3.svg"
-   ],
+   "images": ["/placeholders/products/jeans-4.svg", "/placeholders/products/jeans-7.svg"],
    "sizes": [
     "28",
     "30",
@@ -404,10 +397,7 @@
    "price": 2450000,
    "category": "shirts",
    "gender": "men",
-   "images": [
-    "/placeholders/product-3.svg",
-    "/placeholders/product-4.svg"
-   ],
+   "images": ["/placeholders/products/shirts-2.svg", "/placeholders/products/shirts-5.svg"],
    "sizes": [
     "S",
     "M",
@@ -445,10 +435,7 @@
    "compareAtPrice": 1190000,
    "category": "t-shirts",
    "gender": "women",
-   "images": [
-    "/placeholders/product-4.svg",
-    "/placeholders/product-5.svg"
-   ],
+   "images": ["/placeholders/products/t-shirts-7.svg", "/placeholders/products/t-shirts-2.svg"],
    "sizes": [
     "XS",
     "S",
@@ -485,10 +472,7 @@
    "price": 2790000,
    "category": "hoodies",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-5.svg",
-    "/placeholders/product-6.svg"
-   ],
+   "images": ["/placeholders/products/hoodies-7.svg", "/placeholders/products/hoodies-2.svg"],
    "sizes": [
     "S",
     "M",
@@ -526,10 +510,7 @@
    "price": 2190000,
    "category": "dresses",
    "gender": "women",
-   "images": [
-    "/placeholders/product-6.svg",
-    "/placeholders/product-1.svg"
-   ],
+   "images": ["/placeholders/products/dresses-1.svg", "/placeholders/products/dresses-4.svg"],
    "sizes": [
     "XS",
     "S",
@@ -567,10 +548,7 @@
    "compareAtPrice": 3100000,
    "category": "pants",
    "gender": "men",
-   "images": [
-    "/placeholders/product-1.svg",
-    "/placeholders/product-2.svg"
-   ],
+   "images": ["/placeholders/products/pants-3.svg", "/placeholders/products/pants-6.svg"],
    "sizes": [
     "S",
     "M",
@@ -607,10 +585,7 @@
    "price": 3100000,
    "category": "jackets",
    "gender": "women",
-   "images": [
-    "/placeholders/product-2.svg",
-    "/placeholders/product-3.svg"
-   ],
+   "images": ["/placeholders/products/jackets-2.svg", "/placeholders/products/jackets-5.svg"],
    "sizes": [
     "S",
     "M",
@@ -646,10 +621,7 @@
    "price": 2650000,
    "category": "shirts",
    "gender": "men",
-   "images": [
-    "/placeholders/product-3.svg",
-    "/placeholders/product-4.svg"
-   ],
+   "images": ["/placeholders/products/shirts-2.svg", "/placeholders/products/shirts-5.svg"],
    "sizes": [
     "S",
     "M",
@@ -686,10 +658,7 @@
    "price": 2350000,
    "category": "pants",
    "gender": "men",
-   "images": [
-    "/placeholders/product-4.svg",
-    "/placeholders/product-5.svg"
-   ],
+   "images": ["/placeholders/products/pants-2.svg", "/placeholders/products/pants-5.svg"],
    "sizes": [
     "30",
     "32",
@@ -727,10 +696,7 @@
    "compareAtPrice": 3490000,
    "category": "shirts",
    "gender": "women",
-   "images": [
-    "/placeholders/product-5.svg",
-    "/placeholders/product-6.svg"
-   ],
+   "images": ["/placeholders/products/shirts-3.svg", "/placeholders/products/shirts-6.svg"],
    "sizes": [
     "XS",
     "S",
@@ -767,10 +733,7 @@
    "price": 3590000,
    "category": "jackets",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-6.svg",
-    "/placeholders/product-1.svg"
-   ],
+   "images": ["/placeholders/products/jackets-4.svg", "/placeholders/products/jackets-7.svg"],
    "sizes": [
     "S",
     "M",
@@ -803,10 +766,7 @@
    "price": 790000,
    "category": "t-shirts",
    "gender": "women",
-   "images": [
-    "/placeholders/product-1.svg",
-    "/placeholders/product-2.svg"
-   ],
+   "images": ["/placeholders/products/t-shirts-5.svg", "/placeholders/products/t-shirts-8.svg"],
    "sizes": [
     "XS",
     "S",
@@ -844,10 +804,7 @@
    "compareAtPrice": 7200000,
    "category": "jackets",
    "gender": "women",
-   "images": [
-    "/placeholders/product-2.svg",
-    "/placeholders/product-3.svg"
-   ],
+   "images": ["/placeholders/products/jackets-6.svg", "/placeholders/products/jackets-1.svg"],
    "sizes": [
     "S",
     "M",
@@ -883,10 +840,7 @@
    "price": 2490000,
    "category": "pants",
    "gender": "men",
-   "images": [
-    "/placeholders/product-3.svg",
-    "/placeholders/product-4.svg"
-   ],
+   "images": ["/placeholders/products/pants-7.svg", "/placeholders/products/pants-2.svg"],
    "sizes": [
     "30",
     "32",
@@ -923,10 +877,7 @@
    "price": 2750000,
    "category": "dresses",
    "gender": "women",
-   "images": [
-    "/placeholders/product-4.svg",
-    "/placeholders/product-5.svg"
-   ],
+   "images": ["/placeholders/products/dresses-8.svg", "/placeholders/products/dresses-3.svg"],
    "sizes": [
     "XS",
     "S",
@@ -963,10 +914,7 @@
    "price": 2190000,
    "category": "hoodies",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-5.svg",
-    "/placeholders/product-6.svg"
-   ],
+   "images": ["/placeholders/products/hoodies-1.svg", "/placeholders/products/hoodies-4.svg"],
    "sizes": [
     "S",
     "M",
@@ -1003,10 +951,7 @@
    "price": 1290000,
    "category": "accessories",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-6.svg",
-    "/placeholders/product-1.svg"
-   ],
+   "images": ["/placeholders/products/accessories-2.svg", "/placeholders/products/accessories-5.svg"],
    "sizes": [
     "S",
     "M",
@@ -1039,10 +984,7 @@
    "compareAtPrice": 3590000,
    "category": "jeans",
    "gender": "women",
-   "images": [
-    "/placeholders/product-1.svg",
-    "/placeholders/product-2.svg"
-   ],
+   "images": ["/placeholders/products/jeans-4.svg", "/placeholders/products/jeans-7.svg"],
    "sizes": [
     "26",
     "28",
@@ -1075,10 +1017,7 @@
    "price": 1590000,
    "category": "accessories",
    "gender": "unisex",
-   "images": [
-    "/placeholders/product-2.svg",
-    "/placeholders/product-3.svg"
-   ],
+   "images": ["/placeholders/products/accessories-3.svg", "/placeholders/products/accessories-6.svg"],
    "sizes": [
     "One Size"
    ],
