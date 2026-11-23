@@ -350,10 +350,10 @@ def add_review(store: Store, customer, product: Product, data: dict) -> Review:
         raise bad_request("امتیاز باید بین ۱ تا ۵ باشد")
     if len(text) < 3:
         raise bad_request("متن نظر را بنویسید")
-    bought = Order.objects.filter(store=store, customer=customer, items__contains=[{"productId": product.key}]).exclude(
-        status=Order.Status.CANCELLED
-    )
-    if not bought.exists():
+    # Checked in Python (JSON "contains" lookups don't exist on SQLite / differ on MySQL)
+    orders = Order.objects.filter(store=store, customer=customer).exclude(status=Order.Status.CANCELLED).only("items")
+    bought = any(any(i.get("productId") == product.key for i in (o.items or [])) for o in orders.iterator())
+    if not bought:
         raise bad_request("فقط خریداران این محصول می‌توانند نظر ثبت کنند")
     if Review.objects.filter(product=product, customer=customer).exists():
         raise conflict("شما قبلاً برای این محصول نظر ثبت کرده‌اید")

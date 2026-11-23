@@ -4,6 +4,7 @@ set -e
 # The Celery worker sets SKIP_MIGRATE=1 (the web container owns migrations).
 if [ -z "${SKIP_MIGRATE}" ]; then
   python manage.py migrate --noinput
+  python manage.py createcachetable
   python manage.py seed
 fi
 if [ "${DJANGO_SETTINGS_MODULE}" = "config.settings.production" ]; then

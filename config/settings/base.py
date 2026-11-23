@@ -104,13 +104,16 @@ DATABASES = {
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("DB_CONN_MAX_AGE", default=60)
 
 # --- Cache (Redis) — also backs rate limiting --------------------------------
+# REDIS_URL empty (hosts without Redis, e.g. PythonAnywhere): the database is the
+# cache — run `python manage.py createcachetable` once after migrate.
+_REDIS_URL = env("REDIS_URL", default="redis://redis:6379/0")
 CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": env("REDIS_URL", default="redis://redis:6379/0"),
-        "KEY_PREFIX": "ws",
-        "TIMEOUT": 300,
-    }
+    "default": (
+        {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": _REDIS_URL}
+        if _REDIS_URL
+        else {"BACKEND": "django.core.cache.backends.db.DatabaseCache", "LOCATION": "ws_cache"}
+    )
+    | {"KEY_PREFIX": "ws", "TIMEOUT": 300}
 }
 
 # --- Auth --------------------------------------------------------------------
