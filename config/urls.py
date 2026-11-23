@@ -27,6 +27,7 @@ from apps.marketing import views as marketing
 from apps.media import views as media
 from apps.orders import views as orders
 from apps.pages import views as pages
+from apps.platform import owner
 from apps.platform import views as platform
 from apps.stats.views import DashboardView
 from apps.stores import members
@@ -106,6 +107,14 @@ api = [
     path("platform/stores", platform.PlatformStoresView.as_view(), name="platform-stores"),
     path("platform/stores/<uuid:store_id>", platform.PlatformStoreDetailView.as_view(), name="platform-store"),
     path("admin/subscription", platform.StoreSubscriptionView.as_view(), name="admin-subscription"),
+    # Platform owner panel (superusers)
+    path("platform/overview", owner.OverviewView.as_view(), name="platform-overview"),
+    path("platform/admin/plans", owner.PlanAdminListView.as_view(), name="platform-admin-plans"),
+    path("platform/admin/plans/<slug:slug>", owner.PlanAdminView.as_view(), name="platform-admin-plan"),
+    path("platform/admin/landing", owner.LandingSettingsAdminView.as_view(), name="platform-admin-landing"),
+    path("platform/admin/articles", owner.ArticleAdminListView.as_view(), name="platform-admin-articles"),
+    path("platform/admin/articles/<int:pk>", owner.ArticleAdminDetailView.as_view(), name="platform-admin-article"),
+    path("platform/admin/content/<str:kind>", owner.ContentListView.as_view(), name="platform-admin-content"),
     # Stats
     path("admin/stats", DashboardView.as_view(), name="admin-stats"),
 ]
