@@ -34,3 +34,16 @@ class ContactFormTests(ApiTestCase):
         self.make_user("o@test.local", "owner", store=other)
         c = self.client_for("o@test.local")
         self.assertEqual(c.get("/api/v1/admin/messages", HTTP_X_STORE_ID=str(other.id)).json()["messages"], [])
+
+
+class NewsletterTests(ApiTestCase):
+    def test_subscribe_is_saved_once_per_store(self):
+        c = APIClient()
+        for _ in range(2):
+            r = c.post("/api/v1/newsletter", {"email": "Fan@Test.local"}, format="json", HTTP_ORIGIN=ORIGIN)
+            self.assertEqual(r.status_code, 200)
+        self.assertEqual(c.post("/api/v1/newsletter", {"email": "bad"}, format="json", HTTP_ORIGIN=ORIGIN).status_code, 400)
+        self.login()
+        d = self.client.get("/api/v1/admin/subscribers").json()
+        self.assertEqual(d["total"], 1)
+        self.assertEqual(d["subscribers"][0]["email"], "fan@test.local")

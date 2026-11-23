@@ -323,3 +323,38 @@ class AdminMessageDetailView(AdminView):
     def delete(self, request, pk):
         self._get(request, pk).delete()
         return Response({"ok": True})
+
+
+# --- Newsletter -------------------------------------------------------------------------
+class NewsletterView(PublicView):
+    @extend_schema(summary="Subscribe to the store's newsletter {email}", request=dict, responses={200: dict, 400: dict})
+    def post(self, request):
+        from apps.core import ratelimit
+
+        from .models import NewsletterSubscriber
+
+        enforce_origin(request)
+        store = resolve_public_store(request)
+        ratelimit.enforce(f"newsletter:{ratelimit.client_ip(request)}", 10, 3600, "درخواست زیاد بود؛ کمی بعد تلاش کنید.")
+        email = body(request).get("email")
+        email = email.strip().lower()[:254] if isinstance(email, str) else ""
+        if "@" not in email or "." not in email.split("@")[-1]:
+            raise bad_request("ایمیل معتبر وارد کنید", {"email": "نامعتبر"})
+        NewsletterSubscriber.objects.get_or_create(store=store, email=email)
+        return Response({"ok": True})  # same answer for repeats (no enumeration)
+
+
+class AdminSubscriberListView(AdminView):
+    @extend_schema(summary="Newsletter subscribers of the current store", responses={200: dict})
+    def get(self, request):
+        from .models import NewsletterSubscriber
+
+        qs = NewsletterSubscriber.objects.filter(store=request.admin.store)
+        return Response(
+            {
+                "total": qs.count(),
+                "subscribers": [
+                    {"email": s.email, "createdAt": s.created_at.isoformat().replace("+00:00", "Z")} for s in qs[:2000]
+                ],
+            }
+        )

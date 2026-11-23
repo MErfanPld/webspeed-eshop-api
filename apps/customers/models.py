@@ -51,3 +51,13 @@ class ContactMessage(models.Model):  # noqa: DJ008
     class Meta:
         ordering = ["-created_at"]
         indexes = [models.Index(fields=["store", "read", "-created_at"])]
+
+
+class NewsletterSubscriber(models.Model):  # noqa: DJ008
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name="newsletter_subscribers")
+    email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [models.UniqueConstraint(fields=["store", "email"], name="uniq_newsletter_email_per_store")]
