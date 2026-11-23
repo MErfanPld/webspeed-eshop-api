@@ -203,7 +203,7 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ## پیوست: فرانت روی Vercel
 اگر فرانت را روی Vercel و API را روی سرور خودتان می‌گذارید:
 
-۱. **متغیرها:** فایل `.env.vercel` (در ریپوی فرانت، کنار `.env.example`) را در Vercel وارد کنید (Settings → Environment Variables → Import) و سپس دیپلوی کنید. `API_INTERNAL_URL` و `MEDIA_PUBLIC_URLS` هنگام بیلد خوانده می‌شوند؛ بعد از هر تغییرشان دوباره دیپلوی کنید.
+۱. **متغیرها:** فایل `.env.vercel.example` (در ریپوی فرانت) را در Vercel وارد کنید (Settings → Environment Variables → Import) و سپس دیپلوی کنید. `API_INTERNAL_URL` و `MEDIA_PUBLIC_URLS` هنگام بیلد خوانده می‌شوند؛ بعد از هر تغییرشان دوباره دیپلوی کنید.
 
 ۲. **دامنه‌ها در Vercel:** `webspeed.ir` و `*.webspeed.ir` را به پروژه اضافه کنید. دامنه wildcard در Vercel فقط وقتی کار می‌کند که nameserverهای دامنه روی Vercel باشند. در آن صورت رکوردهای `api` و `media` را در DNS ِ Vercel به IP سرور خودتان بدهید.
 
