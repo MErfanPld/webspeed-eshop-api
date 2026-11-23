@@ -109,3 +109,23 @@ class DjangoAdminTests(ApiTestCase):
         self.owner.save()
         self.client.force_login(self.owner)
         self.assertEqual(self.client.get("/django-admin/users/user/").status_code, 200)
+
+
+class OriginSettingsTests(ApiTestCase):
+    def test_trailing_slash_in_origins_is_ignored(self):
+        import importlib
+        import os
+
+        from config.settings import base
+
+        old = os.environ.get("CORS_ALLOWED_ORIGINS")
+        os.environ["CORS_ALLOWED_ORIGINS"] = "https://shop.onrender.com/, https://b.example.com"
+        try:
+            reloaded = importlib.reload(base)
+            self.assertEqual(reloaded.CORS_ALLOWED_ORIGINS, ["https://shop.onrender.com", "https://b.example.com"])
+        finally:
+            if old is None:
+                os.environ.pop("CORS_ALLOWED_ORIGINS", None)
+            else:
+                os.environ["CORS_ALLOWED_ORIGINS"] = old
+            importlib.reload(base)

@@ -259,7 +259,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 # --- CORS (explicit origins only, never allow-all) ---------------------------
-CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=[])
+# Origins are scheme://host[:port]; a pasted trailing "/" would never match, so strip it
+CORS_ALLOWED_ORIGINS = [o.strip().rstrip("/") for o in env.list("CORS_ALLOWED_ORIGINS", default=[]) if o.strip()]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     "accept",
@@ -269,7 +270,7 @@ CORS_ALLOW_HEADERS = [
     "x-store-id",
     "x-store-host",
 ]
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=CORS_ALLOWED_ORIGINS)
+CSRF_TRUSTED_ORIGINS = [o.strip().rstrip("/") for o in env.list("CSRF_TRUSTED_ORIGINS", default=CORS_ALLOWED_ORIGINS) if o.strip()]
 # Every subdomain of PLATFORM_DOMAIN is a trusted origin (set below the platform block)
 
 # --- WebSpeed ----------------------------------------------------------------
