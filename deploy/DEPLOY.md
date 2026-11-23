@@ -199,3 +199,22 @@ cd ../webspeed-eshop-api && git pull
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
+
+## پیوست: فرانت روی Vercel
+اگر فرانت را روی Vercel و API را روی سرور خودتان می‌گذارید:
+
+۱. **متغیرها:** فایل `.env.vercel` (در ریپوی فرانت، کنار `.env.example`) را در Vercel وارد کنید (Settings → Environment Variables → Import) و سپس دیپلوی کنید. `API_INTERNAL_URL` و `MEDIA_PUBLIC_URLS` هنگام بیلد خوانده می‌شوند؛ بعد از هر تغییرشان دوباره دیپلوی کنید.
+
+۲. **دامنه‌ها در Vercel:** `webspeed.ir` و `*.webspeed.ir` را به پروژه اضافه کنید. دامنه wildcard در Vercel فقط وقتی کار می‌کند که nameserverهای دامنه روی Vercel باشند. در آن صورت رکوردهای `api` و `media` را در DNS ِ Vercel به IP سرور خودتان بدهید.
+
+۳. **API روی سرور:** بلوک `api.webspeed.ir` در `deploy/nginx/webspeed.conf` را فعال کنید و در `.env` ِ API بگذارید:
+
+   ```dotenv
+   ALLOWED_HOSTS=web,localhost,127.0.0.1,api.webspeed.ir,panel.webspeed.ir
+   TRUST_PROXY_HEADERS=True
+   API_PUBLIC_URL=https://api.webspeed.ir
+   ```
+
+   بدون `TRUST_PROXY_HEADERS=True` همه درخواست‌ها با IP ِ Vercel می‌رسند و محدودیت تعداد درخواست (ورود، کد پیامکی، ثبت سفارش) برای همه کاربران مشترک می‌شود.
+
+۴. **پنل جنگو** در این حالت روی `https://api.webspeed.ir/django-admin` است. `https://api.webspeed.ir` را به `CSRF_TRUSTED_ORIGINS` اضافه کنید.
